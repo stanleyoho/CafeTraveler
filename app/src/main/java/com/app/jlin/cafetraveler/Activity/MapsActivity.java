@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.app.jlin.cafetraveler.Constants.Constants;
+import com.app.jlin.cafetraveler.Constants.UrlConstants;
 import com.app.jlin.cafetraveler.Model.Cafe;
 import com.app.jlin.cafetraveler.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,7 +49,7 @@ public class MapsActivity extends FragmentActivity{
     private void initData() {
         OkHttpClient okHttpClient = new OkHttpClient();
         Request request = new Request.Builder()
-                .url("https://cafenomad.tw/api/v1.2/cafes/taipei")
+                .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
                 .build();
         okHttpClient.newCall(request).enqueue(callback);
     }

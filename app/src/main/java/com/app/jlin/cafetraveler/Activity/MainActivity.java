@@ -21,32 +21,22 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Intent startIntent = new Intent(this,TestService.class);
-        startService(startIntent);
-
-        binding.btnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MapsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        binding.btnGetData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent stopIntent = new Intent(MainActivity.this,TestService.class);
-                stopService(stopIntent);
-
-
-            }
-        });
-
+        checkPermission();
+        initEvent();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
+        checkPermission();
+    }
+
+    private void initEvent() {
+        BtnEvent btnEvent = new BtnEvent();
+        binding.btnMap.setOnClickListener(btnEvent);
+    }
+
+    private void checkPermission() {
         if(!Utils.isNeedRequestPermission()){
             return;
         }
@@ -61,5 +51,16 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private class BtnEvent implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            int viewId = view.getId();
+            switch (viewId){
+                case R.id.btn_map:
+                    startActivity(new Intent(MainActivity.this,MapsActivity.class));
+                    break;
+            }
+        }
+    }
 
 }
