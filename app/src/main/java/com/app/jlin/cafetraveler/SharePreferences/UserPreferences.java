@@ -17,6 +17,9 @@ public class UserPreferences {
     public UserPreferences(Context context){
         this.mContext = context;
     }
+
+    //todo define params
+
 //    public UserPreferences(Context context){
 //        this.userInfo = context.getApplicationContext().getSharedPreferences(Constants.SHARE_PREFERENCES_USER_INFO, Context.MODE_PRIVATE);
 //        this.mContext = context;
