@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.app.jlin.cafetraveler.Builder.PermissionBuilder;
 import com.app.jlin.cafetraveler.R;
-import com.app.jlin.cafetraveler.Service.TestService;
 import com.app.jlin.cafetraveler.Utils.Utils;
 import com.app.jlin.cafetraveler.databinding.ActivityMainBinding;
 
