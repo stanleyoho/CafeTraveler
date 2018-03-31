@@ -3,6 +3,7 @@ package com.app.jlin.cafetraveler.SharePreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.app.jlin.cafetraveler.Constants.Constants;
 import com.google.gson.Gson;
 
 /**
@@ -15,15 +16,11 @@ public class UserPreferences {
     private Context mContext;
 
     public UserPreferences(Context context){
+        this.userInfo = context.getApplicationContext().getSharedPreferences(Constants.SHARE_PREFERENCES_USER_INFO, Context.MODE_PRIVATE);
         this.mContext = context;
     }
 
     //todo define params
-
-//    public UserPreferences(Context context){
-//        this.userInfo = context.getApplicationContext().getSharedPreferences(Constants.SHARE_PREFERENCES_USER_INFO, Context.MODE_PRIVATE);
-//        this.mContext = context;
-//    }
 //
 //    public boolean isLogin() {
 //        return !(Utils.isEmpty(getUserGraphicsLock()) || Utils.isEmpty(getUserCode()) || getUserID() == 0 || Utils.isEmpty(getTokenID()) || Utils.isEmpty(getDeviceID()));

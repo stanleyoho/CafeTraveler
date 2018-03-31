@@ -14,6 +14,7 @@ import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Constants.UrlConstants;
 import com.app.jlin.cafetraveler.Model.Cafe;
 import com.app.jlin.cafetraveler.R;
+import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +27,7 @@ import com.google.gson.JsonArray;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -65,10 +67,16 @@ public class MapsActivity extends FragmentActivity{
             String responseString = response.body().string();
             JsonArray jsonElements = new Gson().fromJson(responseString,JsonArray.class);
             ArrayList<Cafe> cafeArrayList = new ArrayList<>();
+            ArrayList<RMCafe> rmCafeArrayList = new ArrayList<>();
             for(int i = 0 ; i < jsonElements.size() ; i++){
                 Cafe cafe = new Gson().fromJson(jsonElements.get(i),Cafe.class);
                 cafeArrayList.add(cafe);
             }
+            for(int i = 0 ; i < jsonElements.size() ; i++){
+                RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i),RMCafe.class);
+                rmCafeArrayList.add(rmCafe);
+            }
+
             Log.e("cafeArrayList",String.valueOf(cafeArrayList.size()));
             cafeList = cafeArrayList;
 
