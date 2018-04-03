@@ -1,6 +1,7 @@
 package com.app.jlin.cafetraveler.RealmModel;
 
 import com.app.jlin.cafetraveler.Manager.RealmManager;
+import com.app.jlin.cafetraveler.Utils.Utils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +10,6 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 /**
  * Created by jennifer on 2018/3/29.
@@ -29,10 +29,7 @@ public class RMCafe extends RealmObject implements Serializable{
     private int music;
     private String url;
     private String address;
-
-    @Required
     private double latitude;
-    @Required
     private double longitude;
 
     private String limited_time;
@@ -40,6 +37,9 @@ public class RMCafe extends RealmObject implements Serializable{
     private String standing_desk;
     private String mrt;
     private String open_time;
+
+    private String myMrt;
+    private String line;
 
     public String getId() {
         return id;
@@ -54,7 +54,7 @@ public class RMCafe extends RealmObject implements Serializable{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = Utils.unicodeToUtf8(name);
     }
 
     public String getCity() {
@@ -62,7 +62,7 @@ public class RMCafe extends RealmObject implements Serializable{
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = Utils.unicodeToUtf8(city);
     }
 
     public int getWifi() {
@@ -183,6 +183,18 @@ public class RMCafe extends RealmObject implements Serializable{
 
     public void setOpen_time(String open_time) {
         this.open_time = open_time;
+    }
+
+    public String getMyMrt() { return myMrt; }
+
+    public void setMyMrt(String myMrt) { this.myMrt = myMrt; }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
     }
 
     /**

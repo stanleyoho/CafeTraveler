@@ -84,6 +84,7 @@ public class IntroActivity extends BaseActivity{
                     } else if (tempDistance < finalDistance) {
                         finalDistance = tempDistance;
                         finalMrt = mrtModel.getName();
+
                     }
                 }
                 rmCafe.setMyMrt(finalMrt);
