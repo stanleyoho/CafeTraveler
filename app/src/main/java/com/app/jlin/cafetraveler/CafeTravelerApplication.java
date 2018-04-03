@@ -20,7 +20,6 @@ public class CafeTravelerApplication extends Application{
 
         Realm.init(this);
 
-
         registerActivityLifecycleCallbacks(new ActivityLifeCycleStateCallBack());
     }
 

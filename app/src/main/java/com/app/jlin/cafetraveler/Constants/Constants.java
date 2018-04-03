@@ -26,7 +26,5 @@ public class Constants {
     /** realm db name */
     public static final String REALM_NAME = "%s_CafeTraveler.realm";
 
-    /** MRT Type */
-    public static final int RED_LINE = 1;
 }
 

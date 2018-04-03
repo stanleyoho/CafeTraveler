@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Constants.UrlConstants;
+import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.Model.Cafe;
 import com.app.jlin.cafetraveler.R;
@@ -26,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -62,6 +64,9 @@ public class MapsActivity extends FragmentActivity{
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
 
+            mMap.setMaxZoomPreference(14f);
+            mMap.setMinZoomPreference(1f);
+
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(MapsActivity.this ,"Please open location function",Toast.LENGTH_SHORT).show();
@@ -80,7 +85,7 @@ public class MapsActivity extends FragmentActivity{
 
             //recyclerView setAdapter
             binding.recycler.setLayoutManager(new LinearLayoutManager(MapsActivity.this));
-            binding.recycler.setAdapter(new CafeAdapter(MapsActivity.this,getCafeList));
+            binding.recycler.setAdapter(new CafeAdapter(MapsActivity.this,getCafeList,cafeListCallBack));
 
             mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                 @Override
@@ -88,6 +93,13 @@ public class MapsActivity extends FragmentActivity{
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
                 }
             });
+        }
+    };
+
+    private CafeListCallBack cafeListCallBack = new CafeListCallBack() {
+        @Override
+        public void moveToPosition(RMCafe rmCafe) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude())));
         }
     };
 }

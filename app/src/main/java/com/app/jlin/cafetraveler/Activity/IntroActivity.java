@@ -10,6 +10,7 @@ import com.app.jlin.cafetraveler.Constants.UrlConstants;
 import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -69,30 +70,37 @@ public class IntroActivity extends BaseActivity{
 
         @Override
         public void onResponse(Call call, Response response) throws IOException {
-            JsonArray jsonElements = new Gson().fromJson(response.body().string(),JsonArray.class);
-            ArrayList<RMCafe> rmCafeArrayList = new ArrayList<>();
+            String responseBody = response.body().string();
 
-            for (int i = 0; i < jsonElements.size(); i++) {
-                RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
-                double finalDistance = 0;
-                String finalMrt = "";
-                List<MrtModel> mrtModelList = getMrtList();
-                for (MrtModel mrtModel : mrtModelList) {
-                    double tempDistance = Utils.GetDistance(rmCafe.getLatitude(), rmCafe.getLongitude(), mrtModel.getLatitude(), mrtModel.getLongitude());
-                    if (finalDistance == 0) {
-                        finalDistance = tempDistance;
-                    } else if (tempDistance < finalDistance) {
-                        finalDistance = tempDistance;
-                        finalMrt = mrtModel.getName();
+            JsonArray jsonElements = new Gson().fromJson(responseBody,JsonArray.class);
+            Log.e("jsonElements",String.valueOf(jsonElements.size()));
+            Log.e("RMCafe.getAll",String.valueOf(RMCafe.getAll().size()));
 
+            //資料數量不一樣在做處理
+            if(jsonElements.size() != RMCafe.getAll().size()){
+                RMCafe.deleteAll();
+                ArrayList<RMCafe> rmCafeArrayList = new ArrayList<>();
+                for (int i = 0; i < jsonElements.size(); i++) {
+                    RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
+                    double finalDistance = 0;
+                    String finalMrt = "";
+                    List<MrtModel> mrtModelList = getMrtJsonList();
+                    for (MrtModel mrtModel : mrtModelList) {
+                        //判斷離哪個捷運站最近
+                        double tempDistance = Utils.GetDistance(rmCafe.getLatitude(), rmCafe.getLongitude(), mrtModel.getLatitude(), mrtModel.getLongitude());
+                        if (finalDistance == 0) {
+                            finalDistance = tempDistance;
+                        } else if (tempDistance < finalDistance) {
+                            finalDistance = tempDistance;
+                            finalMrt = mrtModel.getName();
+                        }
                     }
+                    rmCafe.setMyMrt(finalMrt);
+                    rmCafeArrayList.add(rmCafe);
+                    LogUtils.e("for",String.valueOf(rmCafeArrayList.size()));
                 }
-                rmCafe.setMyMrt(finalMrt);
-                rmCafeArrayList.add(rmCafe);
+                RMCafe.addAll(rmCafeArrayList);
             }
-
-            RMCafe.addAll(rmCafeArrayList);
-            Log.e("cafeArrayList",String.valueOf(rmCafeArrayList.size()));
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -104,7 +112,10 @@ public class IntroActivity extends BaseActivity{
         }
     };
 
-    private List<MrtModel> getMrtList(){
+    /**
+     * 取得json file內所有捷運站的List
+     * */
+    private List<MrtModel> getMrtJsonList(){
         List<MrtModel> mrtList = new ArrayList<>();
 
         InputStream is = null;

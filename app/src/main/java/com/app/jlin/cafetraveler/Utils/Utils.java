@@ -123,11 +123,6 @@ public class Utils {
         return d * Math.PI / 180.0;
     }
 
-    /** 判斷是哪個捷運站 */
-//    public static String checkMRT(String mrt){
-//
-//    }
-
     /** 判斷文字是否為數字 */
     public static boolean isNumber(String str) {
         if(str == null || str.length() <= 0){
@@ -138,75 +133,6 @@ public class Utils {
         return pattern.matcher(str).matches();
     }
 
-    /** 判斷密碼是否符合規範 */
-    public static boolean isPasswordMatcher(String password) {
-        if (isEmpty(password)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*[0-9])(?!.*[\\W_])(?!.*([A-Za-z0-9])\\1{5}).{6,20}$");
-        return pattern.matcher(password).matches();
-    }
-
-    /** 取得密碼強度 */
-    public static int getPasswordLevel(String password) {
-        if (isEmpty(password)) {
-            return 0;
-        } else if (password.length() < 6) {
-            return 1;
-        } else {
-            int modes = 1;
-            for (int i = 0; i < password.length(); i ++) {
-                //測試每一個字符的類別並統計一共有多少種模式
-                int mode = charMode(Character.codePointAt(password,i));
-                if (mode != 0) {
-                    modes |= mode;
-                }
-            }
-
-            int modeCount = 0;
-            for (int i = 0; i < 4 ; i++) {
-                if ((modes & 1) == 1) {
-                    modeCount++;
-                }
-                modes >>>= 1;
-            }
-
-            return modeCount;
-        }
-    }
-
-    private static int charMode(int charCode) {
-        if (charCode >= 48 && charCode <= 57) { //數字
-            return 2;
-        }
-        if (charCode >= 65 && charCode <= 90) { //大寫字母
-            return 4;
-        }
-        if (charCode >= 97 && charCode <= 122) { //小寫
-            return 8;
-        }
-        return 0;
-    }
-
-    /** 簡單判斷9~15碼的電話(開頭不為0) */
-    public static boolean isPhoneNumberMatcher(String phoneNumber) {
-        if (isEmpty(phoneNumber)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^[1-9][0-9]{8,14}$");
-        return pattern.matcher(phoneNumber).matches();
-    }
-
-    public static boolean isUserCodeMatcher(String userCode) {
-        if (isEmpty(userCode)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?!.*[^a-zA-Z0-9]).{4,20}$");
-        return pattern.matcher(userCode).matches();
-    }
 
     /** 隱藏 鍵盤 */
     public static void hideSoftInput(Context context, View view) {

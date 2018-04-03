@@ -39,7 +39,11 @@ public class RMCafe extends RealmObject implements Serializable{
     private String open_time;
 
     private String myMrt;
-    private String line;
+    private boolean isRedLine;
+    private boolean isGreenLine;
+    private boolean isBlueLine;
+    private boolean isOrangeLine;
+    private boolean isBrownLine;
 
     public String getId() {
         return id;
@@ -189,12 +193,44 @@ public class RMCafe extends RealmObject implements Serializable{
 
     public void setMyMrt(String myMrt) { this.myMrt = myMrt; }
 
-    public String getLine() {
-        return line;
+    public boolean isRedLine() {
+        return isRedLine;
     }
 
-    public void setLine(String line) {
-        this.line = line;
+    public void setRedLine(boolean redLine) {
+        isRedLine = redLine;
+    }
+
+    public boolean isGreenLine() {
+        return isGreenLine;
+    }
+
+    public void setGreenLine(boolean greenLine) {
+        isGreenLine = greenLine;
+    }
+
+    public boolean isBlueLine() {
+        return isBlueLine;
+    }
+
+    public void setBlueLine(boolean blueLine) {
+        isBlueLine = blueLine;
+    }
+
+    public boolean isOrangeLine() {
+        return isOrangeLine;
+    }
+
+    public void setOrangeLine(boolean orangeLine) {
+        isOrangeLine = orangeLine;
+    }
+
+    public boolean isBrownLine() {
+        return isBrownLine;
+    }
+
+    public void setBrownLine(boolean brownLine) {
+        isBrownLine = brownLine;
     }
 
     /**

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.ViewModel.CafeViewModel;
@@ -22,10 +23,12 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private Context context;
     private List<RMCafe> cafeList;
+    private CafeListCallBack cafeListCallBack;
 
-    public CafeAdapter(Context context, List<RMCafe> cafeList){
+    public CafeAdapter(Context context, List<RMCafe> cafeList, CafeListCallBack cafeListCallBack){
         this.context = context;
         this.cafeList = cafeList;
+        this.cafeListCallBack = cafeListCallBack;
     }
 
     @Override
@@ -37,13 +40,21 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof CafeVH){
             CafeVH cafeVH = (CafeVH)holder;
-            RMCafe rmCafe = cafeList.get(position);
+            final RMCafe rmCafe = cafeList.get(position);
             CafeViewModel cafeViewModel = new CafeViewModel();
             cafeViewModel.setName(context.getString(R.string.cafe_name,rmCafe.getName()));
             cafeViewModel.setLat(context.getString(R.string.cafe_lat,rmCafe.getLatitude()));
             cafeViewModel.setLon(context.getString(R.string.cafe_lon,rmCafe.getLongitude()));
             cafeViewModel.setMrt(context.getString(R.string.cafe_mrt,rmCafe.getMyMrt()));
             cafeVH.binding.setViewModel(cafeViewModel);
+            if(cafeListCallBack != null){
+                cafeVH.binding.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cafeListCallBack.moveToPosition(rmCafe);
+                    }
+                });
+            }
         }
     }
 

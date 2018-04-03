@@ -26,10 +26,13 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 /**
@@ -173,10 +176,10 @@ public class OkHttpUtils {
 //    }
 //
 //    private Request buildGetRequest(@NonNull String url, @NonNull String contentType) {
-//        Request.Builder builder = new Request.Builder().url(url)
+//        Request.Builder builder = new Request.Builder()
+//                .url(url)
 //                .get()
-//                .addHeader("content-type", contentType)
-//                .addHeader("Cache-Control", "max-age=3600");
+//                .addHeader("content-type", contentType);
 //        return builder.build();
 //    }
 //
@@ -308,7 +311,7 @@ public class OkHttpUtils {
 //            }
 //        }
 //    }
-//
+////
 //    private void callbackResponse(final int tag, final ApiCallBackInterface apiCallBackInterface , final JSONObject data){
 //        if (apiCallBackInterface != null) {
 //            if (mHandler != null) {
@@ -323,7 +326,7 @@ public class OkHttpUtils {
 //            }
 //        }
 //    }
-//
+////
 //    private void callbackResponse(final int tag, final ApiCallBackInterface apiCallBackInterface , final JSONArray data){
 //        if (apiCallBackInterface != null) {
 //            if (mHandler != null) {
@@ -342,7 +345,7 @@ public class OkHttpUtils {
 //    private void callbackErrorResponse(final int tag, final String errorCode, final ApiCallBackInterface apiCallBackInterface , final String errorMessage) {
 //        callbackErrorResponse(tag, errorCode, apiCallBackInterface, errorMessage, null);
 //    }
-//
+////
 //    private void callbackErrorResponse(final int tag, final String errorCode, final ApiCallBackInterface apiCallBackInterface , final String errorMessage, final JSONObject data){
 //        if (apiCallBackInterface != null) {
 //            if (mHandler != null) {
