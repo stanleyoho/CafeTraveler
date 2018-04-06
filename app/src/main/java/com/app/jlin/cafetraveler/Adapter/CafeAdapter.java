@@ -46,6 +46,7 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             cafeViewModel.setLat(context.getString(R.string.cafe_lat,rmCafe.getLatitude()));
             cafeViewModel.setLon(context.getString(R.string.cafe_lon,rmCafe.getLongitude()));
             cafeViewModel.setMrt(context.getString(R.string.cafe_mrt,rmCafe.getMyMrt()));
+            cafeViewModel.setLine(context.getString(R.string.cafe_line,rmCafe.getMrtLine()));
             cafeVH.binding.setViewModel(cafeViewModel);
             if(cafeListCallBack != null){
                 cafeVH.binding.layout.setOnClickListener(new View.OnClickListener() {

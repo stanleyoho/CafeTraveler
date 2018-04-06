@@ -11,6 +11,7 @@ import com.app.jlin.cafetraveler.Constants.UrlConstants;
 import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.Utils.CheckLineUtils;
 import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.Utils.Utils;
 import com.google.gson.Gson;
@@ -95,6 +96,8 @@ public class IntroActivity extends BaseActivity {
                     RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
                     double finalDistance = 0;
                     String finalMrt = "";
+                    int finalMrtId;
+                    CheckLineUtils checkLineUtils = new CheckLineUtils();
                     List<MrtModel> mrtModelList = getMrtJsonList();
                     for (MrtModel mrtModel : mrtModelList) {
                         //判斷離哪個捷運站最近
@@ -104,9 +107,18 @@ public class IntroActivity extends BaseActivity {
                         } else if (tempDistance < finalDistance) {
                             finalDistance = tempDistance;
                             finalMrt = mrtModel.getName();
+                            checkLineUtils.setLineFalse();
+                            finalMrtId = mrtModel.getId();
+                            checkLineUtils.whichLine(finalMrtId);
                         }
                     }
                     rmCafe.setMyMrt(finalMrt);
+                    rmCafe.setRedLine(checkLineUtils.isRedLine());
+                    rmCafe.setBlueLine(checkLineUtils.isBlueLine());
+                    rmCafe.setGreenLine(checkLineUtils.isGreenLine());
+                    rmCafe.setBrownLine(checkLineUtils.isBrownLine());
+                    rmCafe.setOrangeLine(checkLineUtils.isOrangeLine());
+                    rmCafe.setMrtLine();
                     rmCafeArrayList.add(rmCafe);
                     progressHandler.setProgress(i);
                     progressHandler.sendEmptyMessage(0);
@@ -161,6 +173,7 @@ public class IntroActivity extends BaseActivity {
 
         public void setTotal(int total){
             this.total = total;
+            mProgressDialog.setMax(this.total);
         }
 
         public void setProgress(int progress){
@@ -176,7 +189,7 @@ public class IntroActivity extends BaseActivity {
             if(progress == total){
                 mProgressDialog.dismiss();
             }else{
-                mProgressDialog.setProgress((int)(progress*1.0f/total*100));
+                mProgressDialog.setProgress(progress);
             }
         }
     }
