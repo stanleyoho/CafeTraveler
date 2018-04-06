@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.app.jlin.cafetraveler.Constants.Constants;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
@@ -30,6 +31,97 @@ import java.util.regex.Pattern;
  * public utils
  */
 public class Utils {
+
+    /** Parse Unicode to UTF-8*/
+    /**
+     * unicode 转换成 utf-8
+     * @author fanhui
+     * 2007-3-15
+     * @param theString
+     * @return
+     */
+    public static String unicodeToUtf8(String theString) {
+        char aChar;
+        int len = theString.length();
+        StringBuffer outBuffer = new StringBuffer(len);
+        for (int x = 0; x < len;) {
+            aChar = theString.charAt(x++);
+            if (aChar == '\\') {
+                aChar = theString.charAt(x++);
+                if (aChar == 'u') {
+                    // Read the xxxx
+                    int value = 0;
+                    for (int i = 0; i < 4; i++) {
+                        aChar = theString.charAt(x++);
+                        switch (aChar) {
+                            case '0':
+                            case '1':
+                            case '2':
+                            case '3':
+                            case '4':
+                            case '5':
+                            case '6':
+                            case '7':
+                            case '8':
+                            case '9':
+                                value = (value << 4) + aChar - '0';
+                                break;
+                            case 'a':
+                            case 'b':
+                            case 'c':
+                            case 'd':
+                            case 'e':
+                            case 'f':
+                                value = (value << 4) + 10 + aChar - 'a';
+                                break;
+                            case 'A':
+                            case 'B':
+                            case 'C':
+                            case 'D':
+                            case 'E':
+                            case 'F':
+                                value = (value << 4) + 10 + aChar - 'A';
+                                break;
+                            default:
+                                throw new IllegalArgumentException(
+                                        "Malformed   \\uxxxx   encoding.");
+                        }
+                    }
+                    outBuffer.append((char) value);
+                } else {
+                    if (aChar == 't')
+                        aChar = '\t';
+                    else if (aChar == 'r')
+                        aChar = '\r';
+                    else if (aChar == 'n')
+                        aChar = '\n';
+                    else if (aChar == 'f')
+                        aChar = '\f';
+                    outBuffer.append(aChar);
+                }
+            } else
+                outBuffer.append(aChar);
+        }
+        return outBuffer.toString();
+    }
+
+    /** 計算經緯度距離 */
+    public static double GetDistance(double lat1, double lng1, double lat2, double lng2) {
+        double EARTH_RADIUS = 6378137;
+        double radLat1 = rad(lat1);
+        double radLat2 = rad(lat2);
+        double a = radLat1 - radLat2;
+        double b = rad(lng1) - rad(lng2);
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+                + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000;
+        return s;
+    }
+
+    private static double rad(double d) {
+        return d * Math.PI / 180.0;
+    }
 
     /** 判斷文字是否為數字 */
     public static boolean isNumber(String str) {
@@ -41,75 +133,6 @@ public class Utils {
         return pattern.matcher(str).matches();
     }
 
-    /** 判斷密碼是否符合規範 */
-    public static boolean isPasswordMatcher(String password) {
-        if (isEmpty(password)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*[0-9])(?!.*[\\W_])(?!.*([A-Za-z0-9])\\1{5}).{6,20}$");
-        return pattern.matcher(password).matches();
-    }
-
-    /** 取得密碼強度 */
-    public static int getPasswordLevel(String password) {
-        if (isEmpty(password)) {
-            return 0;
-        } else if (password.length() < 6) {
-            return 1;
-        } else {
-            int modes = 1;
-            for (int i = 0; i < password.length(); i ++) {
-                //測試每一個字符的類別並統計一共有多少種模式
-                int mode = charMode(Character.codePointAt(password,i));
-                if (mode != 0) {
-                    modes |= mode;
-                }
-            }
-
-            int modeCount = 0;
-            for (int i = 0; i < 4 ; i++) {
-                if ((modes & 1) == 1) {
-                    modeCount++;
-                }
-                modes >>>= 1;
-            }
-
-            return modeCount;
-        }
-    }
-
-    private static int charMode(int charCode) {
-        if (charCode >= 48 && charCode <= 57) { //數字
-            return 2;
-        }
-        if (charCode >= 65 && charCode <= 90) { //大寫字母
-            return 4;
-        }
-        if (charCode >= 97 && charCode <= 122) { //小寫
-            return 8;
-        }
-        return 0;
-    }
-
-    /** 簡單判斷9~15碼的電話(開頭不為0) */
-    public static boolean isPhoneNumberMatcher(String phoneNumber) {
-        if (isEmpty(phoneNumber)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^[1-9][0-9]{8,14}$");
-        return pattern.matcher(phoneNumber).matches();
-    }
-
-    public static boolean isUserCodeMatcher(String userCode) {
-        if (isEmpty(userCode)) {
-            return false;
-        }
-
-        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?!.*[^a-zA-Z0-9]).{4,20}$");
-        return pattern.matcher(userCode).matches();
-    }
 
     /** 隱藏 鍵盤 */
     public static void hideSoftInput(Context context, View view) {

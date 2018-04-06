@@ -8,7 +8,6 @@ public class Constants {
 
     /** SharePreferences params */
     public static final String SHARE_PREFERENCES_USER_INFO = "USER_INFO";
-    public static final String PREFERENCES_TOKEN_ID = "PREFERENCES_TOKEN_ID";
 
     /** android 6.0 request permission */
     public static final int REQUEST_PERMISSION = 2000;

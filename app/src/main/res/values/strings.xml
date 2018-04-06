@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">CafeTraveler</string>
     <string name="title_activity_maps">CafeTraveler</string>
+
+    <string name="cafe_name">店家名稱 : %1$s</string>
+    <string name="cafe_lat">經度 : %1$f</string>
+    <string name="cafe_lon">緯度 : %1$f</string>
+    <string name="cafe_mrt">最近的捷運站 : %1$s</string>
+    <string name="cafe_line">哪一條線 : %1$s</string>
 </resources>

@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.app.jlin.cafetraveler.Manager.RealmManager;
+
+import io.realm.Realm;
+
 /**
  * Created by stanley.lin on 2018/3/29.
  */
@@ -13,6 +17,9 @@ public class CafeTravelerApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Realm.init(this);
+
         registerActivityLifecycleCallbacks(new ActivityLifeCycleStateCallBack());
     }
 
