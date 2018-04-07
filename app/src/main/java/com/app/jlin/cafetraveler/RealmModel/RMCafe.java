@@ -240,11 +240,11 @@ public class RMCafe extends RealmObject implements Serializable{
 
     public void setMrtLine(){
         StringBuffer sb = new StringBuffer();
-        sb.append(isRedLine()?"紅":" ")
-                .append(isBlueLine()?"藍":" ")
-                .append(isGreenLine()?"綠":" ")
-                .append(isBrownLine()?"咖啡":" ")
-                .append(isOrangeLine()?"橘": " ");
+        sb.append(isRedLine()?"紅 ":"")
+                .append(isBlueLine()?"藍 ":"")
+                .append(isGreenLine()?"綠 ":"")
+                .append(isBrownLine()?"咖啡 ":"")
+                .append(isOrangeLine()?"橘 ": "");
         mrtLine = sb.toString();
     }
 
