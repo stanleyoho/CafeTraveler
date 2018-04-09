@@ -20,6 +20,7 @@ import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -104,7 +105,8 @@ public class MapsActivity extends FragmentActivity{
             mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                 @Override
                 public void onMyLocationClick(@NonNull Location location) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),18);
+                    mMap.animateCamera(cameraUpdate);
                 }
             });
         }
@@ -119,7 +121,8 @@ public class MapsActivity extends FragmentActivity{
             MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName());
             marker = mMap.addMarker(markerOptions);
             marker.setTag(0);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude())));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude()),18);
+            mMap.animateCamera(cameraUpdate);
         }
     };
 }
