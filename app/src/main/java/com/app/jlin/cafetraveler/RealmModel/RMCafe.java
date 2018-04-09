@@ -39,6 +39,7 @@ public class RMCafe extends RealmObject implements Serializable{
     private String open_time;
 
     private String myMrt;
+    private String mrtLine;
     private boolean isRedLine;
     private boolean isGreenLine;
     private boolean isBlueLine;
@@ -231,6 +232,20 @@ public class RMCafe extends RealmObject implements Serializable{
 
     public void setBrownLine(boolean brownLine) {
         isBrownLine = brownLine;
+    }
+
+    public String getMrtLine() {
+        return mrtLine;
+    }
+
+    public void setMrtLine(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(isRedLine()?"紅 ":"")
+                .append(isBlueLine()?"藍 ":"")
+                .append(isGreenLine()?"綠 ":"")
+                .append(isBrownLine()?"咖啡 ":"")
+                .append(isOrangeLine()?"橘 ": "");
+        mrtLine = sb.toString();
     }
 
     /**
