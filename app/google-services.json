@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "355730151325",
+    "firebase_url": "https://cafetraveler-199306.firebaseio.com",
+    "project_id": "cafetraveler-199306",
+    "storage_bucket": "cafetraveler-199306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355730151325:android:5bd8e84278dff739",
+        "android_client_info": {
+          "package_name": "com.app.jlin.cafetraveler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "355730151325-heqo2jj73782cboq2vlnim8va4uetke8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCScGePkAvBvle-zu9KWsfAtrdS3L0CZPk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

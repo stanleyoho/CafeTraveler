@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.app.jlin.cafetraveler.Manager.RealmManager;
-
 import io.realm.Realm;
 
 /**
@@ -56,4 +54,5 @@ public class CafeTravelerApplication extends Application{
         public void onActivityDestroyed(Activity activity) {
             }
         }
+
 }
