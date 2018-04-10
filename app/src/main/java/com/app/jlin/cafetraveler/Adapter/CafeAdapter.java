@@ -73,4 +73,9 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             binding = DataBindingUtil.bind(itemView);
         }
     }
+
+    public void updateData(List<RMCafe> cafeList){
+        this.cafeList = cafeList;
+        notifyDataSetChanged();
+    }
 }

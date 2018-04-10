@@ -29,6 +29,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 import io.realm.RealmResults;
 
 public class MapsActivity extends FragmentActivity{
@@ -41,9 +43,35 @@ public class MapsActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_maps);
 
+        initRecyclerView();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(onMapReadyCallback);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void initRecyclerView(){
+        binding.recycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void updateRecyclerView(List<RMCafe> cafeList){
+        CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
+        if(cafeAdapter == null){
+            cafeAdapter = new CafeAdapter(this,cafeList,cafeListCallBack);
+            binding.recycler.setAdapter(cafeAdapter);
+        }else{
+            cafeAdapter.updateData(cafeList);
+        }
     }
 
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
@@ -85,8 +113,9 @@ public class MapsActivity extends FragmentActivity{
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),12));
-
+            if(location != null){
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),12));
+            }
 
             RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
 
@@ -99,8 +128,7 @@ public class MapsActivity extends FragmentActivity{
 //            }
 
             //recyclerView setAdapter
-            binding.recycler.setLayoutManager(new LinearLayoutManager(MapsActivity.this));
-            binding.recycler.setAdapter(new CafeAdapter(MapsActivity.this,getCafeList,cafeListCallBack));
+            updateRecyclerView(getCafeList);
 
             mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                 @Override
@@ -116,7 +144,9 @@ public class MapsActivity extends FragmentActivity{
         private Marker marker;
         @Override
         public void moveToPosition(RMCafe rmCafe) {
-            if(marker != null)marker.remove();      //如果已存在標記則先清除
+            if(marker != null){
+                marker.remove();      //如果已存在標記則先清除
+            }
             LatLng cafeLat = new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName());
             marker = mMap.addMarker(markerOptions);
