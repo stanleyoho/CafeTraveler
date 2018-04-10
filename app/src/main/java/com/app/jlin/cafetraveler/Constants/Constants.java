@@ -26,5 +26,11 @@ public class Constants {
     /** realm db name */
     public static final String REALM_NAME = "%s_CafeTraveler.realm";
 
+    /** Mrt Line */
+    public static final int LINE_RED = 1;
+    public static final int LINE_BLUE = 2;
+    public static final int LINE_GREEN = 3;
+    public static final int LINE_ORANGE = 4;
+    public static final int LINE_BROWN = 5;
 }
 

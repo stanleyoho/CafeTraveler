@@ -296,4 +296,11 @@ public class RMCafe extends RealmObject implements Serializable{
         cafeList.deleteAllFromRealm();
         realm.commitTransaction();
     }
+
+    /**
+     * 取得某幾條線上的咖啡店
+     */
+//    public static RealmResults<RMCafe> getFilterResultByLine(List<RMCafe> filterList){
+//
+//    }
 }

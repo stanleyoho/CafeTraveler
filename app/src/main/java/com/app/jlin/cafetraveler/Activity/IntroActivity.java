@@ -23,7 +23,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,7 +47,6 @@ public class IntroActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
-
         mProgressDialog = new ProgressDialog(IntroActivity.this);
         handler = new Handler();
         progressHandler = new ProgressHandler(mProgressDialog);
@@ -77,6 +78,7 @@ public class IntroActivity extends BaseActivity {
         @Override
         public void onFailure(Call call, IOException e) {
             Log.e("onFailure", e.toString());
+            postToNextActivity();
         }
 
         @Override
@@ -86,6 +88,30 @@ public class IntroActivity extends BaseActivity {
             final JsonArray jsonElements = new Gson().fromJson(responseBody, JsonArray.class);
             Log.e("jsonElements", String.valueOf(jsonElements.size()));
             Log.e("RMCafe.getAll", String.valueOf(RMCafe.getAll().size()));
+
+            ///////////////////data analytics test///////////////////
+            Map<String,RMCafe> localDbMap = new HashMap<>();
+            Map<String,RMCafe> remoteDbMap = new HashMap<>();
+            List<RMCafe> differentList = new ArrayList<>();
+
+            LogUtils.e("different Start", String.valueOf(differentList.size()));
+
+            for(RMCafe cafe : RMCafe.getAll()){
+                localDbMap.put(cafe.getId(),cafe);
+            }
+
+            for (int i = 0; i < jsonElements.size(); i++) {
+                RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
+                remoteDbMap.put(rmCafe.getId(),rmCafe);
+            }
+
+            for(Object key : remoteDbMap.keySet()){
+                if(localDbMap.get(key) == null){
+                    differentList.add(remoteDbMap.get(key));
+                }
+            }
+            LogUtils.e("different End", String.valueOf(differentList.size()));
+            ///////////////////data analytics test///////////////////
 
             //資料數量不一樣在做處理
             if (jsonElements.size() != RMCafe.getAll().size()) {
@@ -128,13 +154,8 @@ public class IntroActivity extends BaseActivity {
             }
 
             progressHandler.disDialog();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(IntroActivity.this, MainActivity.class));
-                    finish();
-                }
-            }, 1000);
+
+            postToNextActivity();
         }
     };
 
@@ -192,5 +213,22 @@ public class IntroActivity extends BaseActivity {
                 mProgressDialog.setProgress(progress);
             }
         }
+    }
+
+    private void postToNextActivity(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(IntroActivity.this, MainActivity.class));
+                finish();
+            }
+        }, 1000);
+    }
+
+    ///////////////////data analytics test///////////////////
+    private void checkDifferentCafeData(){
+        Map<String,RMCafe> localDbMap = new HashMap<>();
+        Map<String,RMCafe> remoteDbMap = new HashMap<>();
+        List<RMCafe> differentList = new ArrayList<>();
     }
 }
