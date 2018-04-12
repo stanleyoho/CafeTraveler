@@ -2,7 +2,10 @@ package com.app.jlin.cafetraveler.Adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,12 @@ import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.ViewModel.CafeViewModel;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerBinding;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,8 +82,37 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
-    public void updateData(List<RMCafe> cafeList){
+    private List<MarkerOptions> markerOps = new ArrayList<>();
+
+    public void updateData(Context context,List<RMCafe> cafeList, GoogleMap map,Boolean isChecked){
         this.cafeList = cafeList;
+        if(!markerOps.isEmpty()){
+            map.clear();
+            markerOps.clear();
+            Log.d("inMarkersClear",Integer.toString(markerOps.size()));
+        }
+        if(isChecked) addMarker(context,cafeList,map,markerOps);
+        for(MarkerOptions markerOptions : markerOps){
+            map.addMarker(markerOptions);
+            Log.d("inAddMarker","add new markers");
+        }
         notifyDataSetChanged();
+    }
+
+    private void addMarker(Context context,List<RMCafe> cafeList, GoogleMap map,List<MarkerOptions> markerOps) {
+        for(RMCafe rmCafe : cafeList){
+            LatLng place = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
+            String title = rmCafe.getName();
+            BitmapDrawable icon = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_mymarker);
+            Bitmap bitmap = icon.getBitmap();
+            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,80,160,false);
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(place)
+                    .title(title)
+                    .icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+            markerOps.add(markerOptions);
+        }
+        Log.d("inAddMarkerOptions",Integer.toString(markerOps.size()));
     }
 }

@@ -146,7 +146,7 @@ public class IntroActivity extends BaseActivity {
                     rmCafe.setOrangeLine(checkLineUtils.isOrangeLine());
                     rmCafe.setMrtLine();
                     rmCafeArrayList.add(rmCafe);
-                    progressHandler.setProgress(i);
+                    progressHandler.setProgress(i+1);
                     progressHandler.sendEmptyMessage(0);
                     LogUtils.e("for", String.valueOf(rmCafeArrayList.size()));
                 }

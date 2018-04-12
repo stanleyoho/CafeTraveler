@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -69,14 +72,13 @@ public class MapsActivity extends FragmentActivity {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void updateRecyclerView(List<RMCafe> cafeList) {
+    private void updateRecyclerView(List<RMCafe> cafeList, GoogleMap map, Boolean isChecked) {
         CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
         if (cafeAdapter == null) {
             cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack);
             binding.recycler.setAdapter(cafeAdapter);
         } else {
-            cafeAdapter.updateData(cafeList);
-            Log.d("inUpdateRecyclerView","RecyclerView Updated");
+                cafeAdapter.updateData(this, cafeList, map, isChecked);
         }
     }
 
@@ -134,7 +136,7 @@ public class MapsActivity extends FragmentActivity {
 //            }
 
             //recyclerView setAdapter
-            updateRecyclerView(getCafeList);
+            updateRecyclerView(getCafeList, mMap, false);
 
             mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                 @Override
@@ -155,7 +157,10 @@ public class MapsActivity extends FragmentActivity {
                 marker.remove();      //如果已存在標記則先清除
             }
             LatLng cafeLat = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName());
+            BitmapDrawable icon = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_mymarker_focus);
+            Bitmap bitmap = icon.getBitmap();
+            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,120,240,false);
+            MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName()).icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
             marker = mMap.addMarker(markerOptions);
             marker.setTag(0);
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude()), 18);
@@ -183,15 +188,15 @@ public class MapsActivity extends FragmentActivity {
                             RMCafe rmCafe = RealmManager.getInstance().getRealm().where(RMCafe.class).equalTo("id", cafeId).findFirst();
                             checkedList.add(rmCafe);
                         }
-                        updateRecyclerView(checkedList);
+                        updateRecyclerView(checkedList, mMap, true);
                     } else {
                         Log.d("nonCheckedListId", "failed to get checkedListId");
                     }
                     break;
                 case RESULT_CANCELED:
-                    Log.d("resultCode",Integer.toString(resultCode));
+                    Log.d("resultCode", Integer.toString(resultCode));
                     RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
-                    updateRecyclerView(getCafeList);
+                    updateRecyclerView(getCafeList, mMap, false);
                     break;
             }
         }
