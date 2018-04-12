@@ -2,6 +2,7 @@ package com.app.jlin.cafetraveler.Activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
@@ -12,6 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
@@ -29,19 +32,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmResults;
 
-public class MapsActivity extends FragmentActivity{
+public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap;
-
+    private final int REQUEST_CODE = 0;
     private ActivityMapsBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_maps);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
 
         initRecyclerView();
 
@@ -60,17 +65,18 @@ public class MapsActivity extends FragmentActivity{
         super.onDestroy();
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void updateRecyclerView(List<RMCafe> cafeList){
-        CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
-        if(cafeAdapter == null){
-            cafeAdapter = new CafeAdapter(this,cafeList,cafeListCallBack);
+    private void updateRecyclerView(List<RMCafe> cafeList) {
+        CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
+        if (cafeAdapter == null) {
+            cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack);
             binding.recycler.setAdapter(cafeAdapter);
-        }else{
+        } else {
             cafeAdapter.updateData(cafeList);
+            Log.d("inUpdateRecyclerView","RecyclerView Updated");
         }
     }
 
@@ -84,8 +90,8 @@ public class MapsActivity extends FragmentActivity{
 
             if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MapsActivity.this ,"Please open location function",Toast.LENGTH_SHORT).show();
-            }else {
+                Toast.makeText(MapsActivity.this, "Please open location function", Toast.LENGTH_SHORT).show();
+            } else {
                 mMap.setMyLocationEnabled(true);
             }
 
@@ -93,7 +99,7 @@ public class MapsActivity extends FragmentActivity{
              * 利用LocationManager取得當前所在位置
              * 並於google map開啟時顯示當前位置
              */
-            LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
@@ -111,10 +117,10 @@ public class MapsActivity extends FragmentActivity{
                 public void onProviderDisabled(String s) {
                 }
             };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if(location != null){
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),12));
+            if (location != null) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
             }
 
             RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
@@ -133,7 +139,7 @@ public class MapsActivity extends FragmentActivity{
             mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                 @Override
                 public void onMyLocationClick(@NonNull Location location) {
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()),18);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18);
                     mMap.animateCamera(cameraUpdate);
                 }
             });
@@ -142,17 +148,53 @@ public class MapsActivity extends FragmentActivity{
 
     private CafeListCallBack cafeListCallBack = new CafeListCallBack() {
         private Marker marker;
+
         @Override
         public void moveToPosition(RMCafe rmCafe) {
-            if(marker != null){
+            if (marker != null) {
                 marker.remove();      //如果已存在標記則先清除
             }
-            LatLng cafeLat = new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude());
+            LatLng cafeLat = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName());
             marker = mMap.addMarker(markerOptions);
             marker.setTag(0);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(),rmCafe.getLongitude()),18);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude()), 18);
             mMap.animateCamera(cameraUpdate);
         }
     };
+
+    public void toCheckList(View view) {
+        Intent intent = new Intent(this, CheckListActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            Log.d("requestCode", Integer.toString(requestCode));
+            switch (resultCode) {
+                case RESULT_OK:
+                    Log.d("resultCode", Integer.toString(resultCode));
+                    ArrayList<String> checkedListId = data.getExtras().getStringArrayList("checkedCafeList"); //TODO: solve NPE
+                    List<RMCafe> checkedList = new ArrayList<>();
+                    if (checkedListId != null) {
+                        for (String cafeId : checkedListId) {
+                            RMCafe rmCafe = RealmManager.getInstance().getRealm().where(RMCafe.class).equalTo("id", cafeId).findFirst();
+                            checkedList.add(rmCafe);
+                        }
+                        updateRecyclerView(checkedList);
+                    } else {
+                        Log.d("nonCheckedListId", "failed to get checkedListId");
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    Log.d("resultCode",Integer.toString(resultCode));
+                    RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
+                    updateRecyclerView(getCafeList);
+                    break;
+            }
+        }
+    }
 }
+

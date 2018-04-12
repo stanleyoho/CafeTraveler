@@ -7,4 +7,8 @@
     <string name="cafe_lon">緯度 : %1$f</string>
     <string name="cafe_mrt">最近的捷運站 : %1$s</string>
     <string name="cafe_line">哪一條線 : %1$s</string>
+
+    <string name="if_wifi">是否有wifi？</string>
+    <string name="if_seat">是否有座位？</string>
+    <string name="if_quiet">環境是否安靜？</string>
 </resources>
