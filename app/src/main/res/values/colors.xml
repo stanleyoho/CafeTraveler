@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--MrtLine-->
+    <color name="line_red">#ff3030</color>
+    <color name="line_blue">#0000ff</color>
+    <color name="line_green">#00d800</color>
+    <color name="line_orange">#f26522</color>
+    <color name="line_brown">#e19b2a</color>
+
 </resources>

@@ -7,4 +7,13 @@
     <string name="cafe_lon">緯度 : %1$f</string>
     <string name="cafe_mrt">最近的捷運站 : %1$s</string>
     <string name="cafe_line">哪一條線 : %1$s</string>
+
+    <string-array name="line">
+        <item>請選擇</item>
+        <item>板南線</item>
+        <item>松山新店線</item>
+        <item>文湖線</item>
+        <item>淡水信義線</item>
+        <item>中和新蘆線</item>
+    </string-array>
 </resources>

@@ -44,9 +44,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.MapsActivity"></activity>
-
-        <activity android:name=".Activity.MainActivity"></activity>
+        <activity android:name=".Activity.MapsActivity"/>
+        <activity android:name=".Activity.MainActivity"/>
+        <activity android:name=".Activity.CheckListActivity"/>
     </application>
 
 </manifest>
