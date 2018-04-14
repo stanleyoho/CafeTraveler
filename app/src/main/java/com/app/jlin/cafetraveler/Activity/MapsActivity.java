@@ -128,7 +128,7 @@ public class MapsActivity extends FragmentActivity {
             RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
 
 //            將此方法移至CafeListCallBack，使地圖上標記有點選咖啡店才顯示
-//            for(RMCafe cafe:getCafeList){
+//            for(RMCafe cafe:allCafeList){
 //                LatLng cafeLat = new LatLng(cafe.getLatitude(),cafe.getLongitude());
 //                MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(cafe.getName());
 //                mMap.addMarker(markerOptions);
