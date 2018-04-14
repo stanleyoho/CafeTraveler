@@ -9,11 +9,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
+import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.databinding.ActivityCheckListBinding;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,19 +36,21 @@ import io.realm.RealmResults;
 public class CheckListActivity extends BaseActivity {
 
     private ActivityCheckListBinding binding;
-    ArrayAdapter<CharSequence> adapter;
-    ArrayAdapter<CharSequence> adapter2;
+    private RealmResults<RMCafe> allCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
+    private List<RMCafe> filterCafeList;
+    private ArrayList<String> checkedList = new ArrayList<>();
+    private String[] redStationArray,blueStationArray,greenStationArray,orangeStationArray,brownStationArray;
+    int selectedMrtType = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_check_list);
+        initStationArray();
         initEvent();
         initFirstSpinner();
     }
-    RealmResults<RMCafe> allCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
-    List<RMCafe> filterCafeList;
-    ArrayList<String> checkedList = new ArrayList<>();
+
 
     @Override
     protected void onResume() {
@@ -58,6 +69,14 @@ public class CheckListActivity extends BaseActivity {
         binding.btnCancel.setOnClickListener(btnEvent);
     }
 
+    private void initStationArray(){
+        redStationArray = getLineStations(Constants.LINE_RED);
+        blueStationArray = getLineStations(Constants.LINE_BLUE);
+        greenStationArray = getLineStations(Constants.LINE_GREEN);
+        orangeStationArray = getLineStations(Constants.LINE_ORANGE);
+        brownStationArray = getLineStations(Constants.LINE_BROWN);
+    }
+
     private class BtnEvent implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -69,7 +88,6 @@ public class CheckListActivity extends BaseActivity {
                     binding.cbSeat.setChecked(true);
                     break;
                 case R.id.btn_ok:
-                    Boolean[] resultArray = new Boolean[3];
                     if (binding.cbWifi.isChecked() || binding.cbSeat.isChecked() || binding.cbQuiet.isChecked()) {
                         for (RMCafe rmCafe : filterCafeList) {
                             if (binding.cbWifi.isChecked()) {
@@ -126,40 +144,47 @@ public class CheckListActivity extends BaseActivity {
     }
 
     private void initFirstSpinner() {
-        adapter = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.line_strings, android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.line_strings, android.R.layout.simple_spinner_dropdown_item);
         binding.spLine.setAdapter(adapter);
         binding.spLine.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                ArrayAdapter<String> stationSpinnerAdapter = null;
                 switch (i) {
                     case 0:
                         RMCafe[] tempArray = new RMCafe[allCafeList.size()];
                         allCafeList.toArray(tempArray);
                         filterCafeList = Arrays.asList(tempArray);
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.empty_array, android.R.layout.simple_spinner_dropdown_item);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,new String[0]);
                         break;
                     case 1:
-                        filterCafeList = lineFilter("red");
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.red_lines, android.R.layout.simple_spinner_dropdown_item);
+                        filterCafeList = lineFilter(Constants.LINE_RED);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,redStationArray);
+                        selectedMrtType = Constants.LINE_RED;
                         break;
                     case 2:
-                        filterCafeList = lineFilter("brown");
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.brown_lines, android.R.layout.simple_spinner_dropdown_item);
+                        filterCafeList = lineFilter(Constants.LINE_BROWN);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,brownStationArray);
+                        selectedMrtType = Constants.LINE_BROWN;
                         break;
                     case 3:
-                        filterCafeList = lineFilter("green");
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.green_lines, android.R.layout.simple_spinner_dropdown_item);
+                        filterCafeList = lineFilter(Constants.LINE_GREEN);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,greenStationArray);
+                        selectedMrtType = Constants.LINE_GREEN;
                         break;
                     case 4:
-                        filterCafeList = lineFilter("orange");
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.orange_lines, android.R.layout.simple_spinner_dropdown_item);
+                        filterCafeList = lineFilter(Constants.LINE_ORANGE);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,orangeStationArray);
+                        selectedMrtType = Constants.LINE_ORANGE;
                         break;
                     case 5:
-                        filterCafeList = lineFilter("blue");
-                        adapter2 = ArrayAdapter.createFromResource(CheckListActivity.this, R.array.blue_lines, android.R.layout.simple_spinner_dropdown_item);
+                        filterCafeList = lineFilter(Constants.LINE_BLUE);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,blueStationArray);
+                        selectedMrtType = Constants.LINE_BLUE;
                         break;
                 }
-                binding.spStation.setAdapter(adapter2);
+                binding.spStation.setAdapter(stationSpinnerAdapter);
+                binding.spStation.setOnItemSelectedListener(ItemSelectedListener);
             }
 
             @Override
@@ -168,27 +193,125 @@ public class CheckListActivity extends BaseActivity {
         });
     }
 
-    private ArrayList<RMCafe> lineFilter(String line){
+    private ArrayList<RMCafe> lineFilter(int line){
         ArrayList<RMCafe> tempList = new ArrayList<>();
-        for(RMCafe rmCafe : allCafeList){
-            switch(line){
-                case "red":
-                    if(rmCafe.isRedLine()) tempList.add(rmCafe);
-                    break;
-                case"brown":
-                    if(rmCafe.isBrownLine()) tempList.add(rmCafe);
-                    break;
-                case"green":
-                    if(rmCafe.isGreenLine()) tempList.add(rmCafe);
-                    break;
-                case"orange":
-                    if(rmCafe.isOrangeLine()) tempList.add(rmCafe);
-                    break;
-                case"blue":
-                    if(rmCafe.isBlueLine()) tempList.add(rmCafe);
-                    break;
-            }
-        }
+//        for(RMCafe rmCafe : allCafeList){
+//            switch(line){
+//                case Constants.LINE_RED:
+//                    if(rmCafe.isRedLine()) tempList.add(rmCafe);
+//                    break;
+//                case Constants.LINE_BROWN:
+//                    if(rmCafe.isBrownLine()) tempList.add(rmCafe);
+//                    break;
+//                case Constants.LINE_GREEN:
+//                    if(rmCafe.isGreenLine()) tempList.add(rmCafe);
+//                    break;
+//                case Constants.LINE_ORANGE:
+//                    if(rmCafe.isOrangeLine()) tempList.add(rmCafe);
+//                    break;
+//                case Constants.LINE_BLUE:
+//                    if(rmCafe.isBlueLine()) tempList.add(rmCafe);
+//                    break;
+//            }
+//        }
+        tempList.addAll(RMCafe.getFilterResultByLine(line,null));
         return tempList;
     }
+
+    private String[]  getLineStations(int lineId){
+        List<String> redLineStations = new ArrayList<>();
+        List<String> blueLineStations = new ArrayList<>();
+        List<String> greenLineStations = new ArrayList<>();
+        List<String> orangeLineStations = new ArrayList<>();
+        List<String> brownLineStations = new ArrayList<>();
+
+        redLineStations.add(getResources().getString(R.string.filter_choice));
+        blueLineStations.add(getResources().getString(R.string.filter_choice));
+        greenLineStations.add(getResources().getString(R.string.filter_choice));
+        orangeLineStations.add(getResources().getString(R.string.filter_choice));
+        brownLineStations.add(getResources().getString(R.string.filter_choice));
+
+        InputStream is = null;
+        try{
+            is = getAssets().open("mrt_final.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String data = new String(buffer,"UTF-8");
+            JSONArray jsonArray = new JSONArray(data);
+            for(int i = 0 ; i < jsonArray.length() ; i++){
+                MrtModel mrtModel = new Gson().fromJson(jsonArray.get(i).toString(), MrtModel.class);
+                if(mrtModel.getStation_line_id().equals("BR")) {
+                    brownLineStations.add(mrtModel.getStation_name_chinese());
+                }
+                if(mrtModel.getStation_line_id().equals("R")) {
+                    redLineStations.add(mrtModel.getStation_name_chinese());
+                }
+                if(mrtModel.getStation_line_id().equals("G")) {
+                    greenLineStations.add(mrtModel.getStation_name_chinese());
+                }
+                if(mrtModel.getStation_line_id().equals("O")) {
+                    orangeLineStations.add(mrtModel.getStation_name_chinese());
+                }
+                if(mrtModel.getStation_line_id().equals("BL")) {
+                    blueLineStations.add(mrtModel.getStation_name_chinese());
+                }
+            }
+        }catch (Exception e){
+            LogUtils.e("Exception",e.toString());
+        }
+        switch (lineId){
+            case Constants.LINE_BLUE:
+                return blueLineStations.toArray(new String[blueLineStations.size()]);
+            case Constants.LINE_RED:
+                return redLineStations.toArray(new String[redLineStations.size()]);
+            case Constants.LINE_GREEN:
+                return greenLineStations.toArray(new String[greenLineStations.size()]);
+            case Constants.LINE_ORANGE:
+                return orangeLineStations.toArray(new String[orangeLineStations.size()]);
+            case Constants.LINE_BROWN:
+                return brownLineStations.toArray(new String[brownLineStations.size()]);
+            default:
+                return null;
+        }
+    }
+
+    private AdapterView.OnItemSelectedListener ItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if(position == 0){
+                filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,null);
+            }else{
+                String station = "";
+                switch (selectedMrtType) {
+                    case Constants.LINE_BLUE:
+                        station = blueStationArray[position];
+                        break;
+                    case Constants.LINE_BROWN:
+                        station = brownStationArray[position];
+                        break;
+                    case Constants.LINE_GREEN:
+                        station = greenStationArray[position];
+                        break;
+                    case Constants.LINE_ORANGE:
+                        station = orangeStationArray[position];
+                        break;
+                    case Constants.LINE_RED:
+                        station = redStationArray[position ];
+                        break;
+                }
+                filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,station);
+                LogUtils.e("filterCafeList", String.valueOf(filterCafeList.size()));
+                for(RMCafe rmCafe : filterCafeList){
+                    LogUtils.e("cafe name : " , rmCafe.getMyMrt());
+                }
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 }

@@ -8,6 +8,8 @@
     <string name="cafe_mrt">最近的捷運站 : %1$s</string>
     <string name="cafe_line">哪一條線 : %1$s</string>
 
+    <string name="filter_choice">請選擇</string>
+
     <string name="line_choice">請選擇線：</string>
     <string name="station_choice">請選擇站名：</string>
     <string name="if_wifi">是否有wifi？</string>

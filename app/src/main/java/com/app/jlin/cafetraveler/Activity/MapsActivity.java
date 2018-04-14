@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity {
             cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack);
             binding.recycler.setAdapter(cafeAdapter);
         } else {
-                cafeAdapter.updateData(this, cafeList, map, isChecked);
+            cafeAdapter.updateData(this, cafeList, map, isChecked);
         }
     }
 

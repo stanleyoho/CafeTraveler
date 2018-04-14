@@ -57,11 +57,10 @@ public class IntroActivity extends BaseActivity {
         mProgressDialog.show();
 
         OkHttpClient okHttpClient = new OkHttpClient();
-        startActivity(new Intent(this,CheckListActivity.class));
-//        Request request = new Request.Builder()
-//                .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
-//                .build();
-//        okHttpClient.newCall(request).enqueue(callback);
+        Request request = new Request.Builder()
+                .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
+                .build();
+        okHttpClient.newCall(request).enqueue(callback);
 
     }
 

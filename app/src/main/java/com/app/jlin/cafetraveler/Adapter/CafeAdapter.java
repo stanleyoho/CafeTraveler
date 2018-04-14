@@ -15,6 +15,7 @@ import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.ViewModel.CafeViewModel;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerBinding;
+import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerEmptyBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,7 +42,11 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CafeVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_recycler,parent,false));
+        if(cafeList == null || cafeList.size() ==0){
+            return new EmptyVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_recycler_empty,parent,false));
+        }else {
+            return new CafeVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_recycler,parent,false));
+        }
     }
 
     @Override
@@ -77,6 +82,15 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private ItemCafeInfoRecyclerBinding binding;
 
         public CafeVH(View itemView) {
+            super(itemView);
+            binding = DataBindingUtil.bind(itemView);
+        }
+    }
+
+    private class EmptyVH extends RecyclerView.ViewHolder{
+
+        private ItemCafeInfoRecyclerEmptyBinding binding;
+        public EmptyVH(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
         }
