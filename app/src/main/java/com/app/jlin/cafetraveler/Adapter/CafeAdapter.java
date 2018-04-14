@@ -69,7 +69,10 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     }
                 });
             }
+        }else if(holder instanceof EmptyVH){
+
         }
+        holder.setIsRecyclable(false);
     }
 
     @Override
