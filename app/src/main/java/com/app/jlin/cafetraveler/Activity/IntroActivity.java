@@ -91,23 +91,23 @@ public class IntroActivity extends BaseActivity {
             Log.e("RMCafe.getAll", String.valueOf(RMCafe.getAll().size()));
 
             ///////////////////data analytics test///////////////////
-            Map<String,RMCafe> localDbMap = new HashMap<>();
-            Map<String,RMCafe> remoteDbMap = new HashMap<>();
+            Map<String, RMCafe> localDbMap = new HashMap<>();
+            Map<String, RMCafe> remoteDbMap = new HashMap<>();
             List<RMCafe> differentList = new ArrayList<>();
 
             LogUtils.e("different Start", String.valueOf(differentList.size()));
 
-            for(RMCafe cafe : RMCafe.getAll()){
-                localDbMap.put(cafe.getId(),cafe);
+            for (RMCafe cafe : RMCafe.getAll()) {
+                localDbMap.put(cafe.getId(), cafe);
             }
 
             for (int i = 0; i < jsonElements.size(); i++) {
                 RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
-                remoteDbMap.put(rmCafe.getId(),rmCafe);
+                remoteDbMap.put(rmCafe.getId(), rmCafe);
             }
 
-            for(Object key : remoteDbMap.keySet()){
-                if(localDbMap.get(key) == null){
+            for (Object key : remoteDbMap.keySet()) {
+                if (localDbMap.get(key) == null) {
                     differentList.add(remoteDbMap.get(key));
                 }
             }
@@ -123,7 +123,7 @@ public class IntroActivity extends BaseActivity {
                     RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
                     double finalDistance = 0;
                     String finalMrt = "";
-                    int finalMrtId;
+                    String finalMrtId;
                     CheckLineUtils checkLineUtils = new CheckLineUtils();
                     List<MrtModel> mrtModelList = getMrtJsonList();
                     for (MrtModel mrtModel : mrtModelList) {
@@ -131,11 +131,14 @@ public class IntroActivity extends BaseActivity {
                         double tempDistance = Utils.GetDistance(rmCafe.getLatitude(), rmCafe.getLongitude(), mrtModel.getLatitude(), mrtModel.getLongitude());
                         if (finalDistance == 0) {
                             finalDistance = tempDistance;
-                        } else if (tempDistance < finalDistance) {
-                            finalDistance = tempDistance;
-                            finalMrt = mrtModel.getName();
+                        }
+                        if (tempDistance <= finalDistance) {
+                            if (tempDistance < finalDistance) {
                             checkLineUtils.setLineFalse();
-                            finalMrtId = mrtModel.getId();
+                        }
+                            finalDistance = tempDistance;
+                            finalMrt = mrtModel.getStation_name_chinese();
+                            finalMrtId = mrtModel.getStation_line_id();
                             checkLineUtils.whichLine(finalMrtId);
                         }
                     }
@@ -147,7 +150,7 @@ public class IntroActivity extends BaseActivity {
                     rmCafe.setOrangeLine(checkLineUtils.isOrangeLine());
                     rmCafe.setMrtLine();
                     rmCafeArrayList.add(rmCafe);
-                    progressHandler.setProgress(i);
+                    progressHandler.setProgress(i + 1);
                     progressHandler.sendEmptyMessage(0);
                     LogUtils.e("for", String.valueOf(rmCafeArrayList.size()));
                 }
@@ -168,7 +171,7 @@ public class IntroActivity extends BaseActivity {
 
         InputStream is = null;
         try {
-            is = getAssets().open("Mrt.json");
+            is = getAssets().open("mrt_final.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -187,36 +190,36 @@ public class IntroActivity extends BaseActivity {
 
     private class ProgressHandler extends Handler {
         private ProgressDialog mProgressDialog;
-        private int progress,total;
+        private int progress, total;
 
         public ProgressHandler(ProgressDialog mProgressDialog) {
             this.mProgressDialog = mProgressDialog;
         }
 
-        public void setTotal(int total){
+        public void setTotal(int total) {
             this.total = total;
             mProgressDialog.setMax(this.total);
         }
 
-        public void setProgress(int progress){
+        public void setProgress(int progress) {
             this.progress = progress;
             updateDialog();
         }
 
-        public void disDialog(){
+        public void disDialog() {
             mProgressDialog.dismiss();
         }
 
-        private void updateDialog(){
-            if(progress == total){
+        private void updateDialog() {
+            if (progress == total) {
                 mProgressDialog.dismiss();
-            }else{
+            } else {
                 mProgressDialog.setProgress(progress);
             }
         }
     }
 
-    private void postToNextActivity(){
+    private void postToNextActivity() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -227,9 +230,9 @@ public class IntroActivity extends BaseActivity {
     }
 
     ///////////////////data analytics test///////////////////
-    private void checkDifferentCafeData(){
-        Map<String,RMCafe> localDbMap = new HashMap<>();
-        Map<String,RMCafe> remoteDbMap = new HashMap<>();
+    private void checkDifferentCafeData() {
+        Map<String, RMCafe> localDbMap = new HashMap<>();
+        Map<String, RMCafe> remoteDbMap = new HashMap<>();
         List<RMCafe> differentList = new ArrayList<>();
     }
 }
