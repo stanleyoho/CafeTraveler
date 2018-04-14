@@ -62,6 +62,7 @@ public class CheckListActivity extends BaseActivity {
                     binding.cbSeat.setChecked(true);
                     break;
                 case R.id.btn_ok:
+                    Boolean[] resultArray = new Boolean[3];
                     if (binding.cbWifi.isChecked() || binding.cbSeat.isChecked() || binding.cbQuiet.isChecked()) {
                         for (RMCafe rmCafe : getCafeList) {
                             if (binding.cbWifi.isChecked()) {
