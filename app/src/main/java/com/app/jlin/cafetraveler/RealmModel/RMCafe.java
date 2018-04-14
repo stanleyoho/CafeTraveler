@@ -1,5 +1,6 @@
 package com.app.jlin.cafetraveler.RealmModel;
 
+import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.Utils.Utils;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 
@@ -298,9 +300,34 @@ public class RMCafe extends RealmObject implements Serializable{
     }
 
     /**
-     * 取得某幾條線上的咖啡店
+     * 取得某條或特定捷運站咖啡店
+     * @param lineType MrtType
+     * @param stationName Station chinese name
      */
-//    public static RealmResults<RMCafe> getFilterResultByLine(List<RMCafe> filterList){
-//
-//    }
+    public static RealmResults<RMCafe> getFilterResultByLine(int lineType , String stationName){
+        Realm realm = RealmManager.getInstance().getRealm();
+        RealmQuery<RMCafe> query = realm.where(RMCafe.class);
+
+        switch (lineType){
+            case Constants.LINE_BLUE:
+                query.equalTo("isBlueLine",true);
+                break;
+            case Constants.LINE_BROWN:
+                query.equalTo("isBrownLine",true);
+                break;
+            case Constants.LINE_RED:
+                query.equalTo("isRedLine",true);
+                break;
+            case Constants.LINE_GREEN:
+                query.equalTo("isGreenLine",true);
+                break;
+            case Constants.LINE_ORANGE:
+                query.equalTo("isOrangeLine",true);
+                break;
+        }
+        if(stationName != null){
+            query.and().equalTo("myMrt",stationName);
+        }
+        return query.findAll();
+    }
 }
