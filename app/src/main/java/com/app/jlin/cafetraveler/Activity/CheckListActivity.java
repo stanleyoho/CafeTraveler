@@ -19,9 +19,7 @@ import com.app.jlin.cafetraveler.databinding.ActivityCheckListBinding;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -195,25 +193,6 @@ public class CheckListActivity extends BaseActivity {
 
     private ArrayList<RMCafe> lineFilter(int line){
         ArrayList<RMCafe> tempList = new ArrayList<>();
-//        for(RMCafe rmCafe : allCafeList){
-//            switch(line){
-//                case Constants.LINE_RED:
-//                    if(rmCafe.isRedLine()) tempList.add(rmCafe);
-//                    break;
-//                case Constants.LINE_BROWN:
-//                    if(rmCafe.isBrownLine()) tempList.add(rmCafe);
-//                    break;
-//                case Constants.LINE_GREEN:
-//                    if(rmCafe.isGreenLine()) tempList.add(rmCafe);
-//                    break;
-//                case Constants.LINE_ORANGE:
-//                    if(rmCafe.isOrangeLine()) tempList.add(rmCafe);
-//                    break;
-//                case Constants.LINE_BLUE:
-//                    if(rmCafe.isBlueLine()) tempList.add(rmCafe);
-//                    break;
-//            }
-//        }
         tempList.addAll(RMCafe.getFilterResultByLine(line,null));
         return tempList;
     }
@@ -283,24 +262,7 @@ public class CheckListActivity extends BaseActivity {
             if(position == 0){
                 filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,null);
             }else{
-                String station = "";
-                switch (selectedMrtType) {
-                    case Constants.LINE_BLUE:
-                        station = blueStationArray[position];
-                        break;
-                    case Constants.LINE_BROWN:
-                        station = brownStationArray[position];
-                        break;
-                    case Constants.LINE_GREEN:
-                        station = greenStationArray[position];
-                        break;
-                    case Constants.LINE_ORANGE:
-                        station = orangeStationArray[position];
-                        break;
-                    case Constants.LINE_RED:
-                        station = redStationArray[position ];
-                        break;
-                }
+                String station = parent.getSelectedItem().toString();
                 filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,station);
                 LogUtils.e("filterCafeList", String.valueOf(filterCafeList.size()));
                 for(RMCafe rmCafe : filterCafeList){
