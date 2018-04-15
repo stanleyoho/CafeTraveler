@@ -8,6 +8,13 @@ public class Constants {
 
     /** SharePreferences params */
     public static final String SHARE_PREFERENCES_USER_INFO = "USER_INFO";
+    public static final String FILTER_CHECKED_PREFERENCES = "CHECKED_FILTER";
+    public static final String PREFERENCES_WIFI_LEVEL = "WIFI_LEVEL";
+    public static final String PREFERENCES_SEAT_LEVEL = "SEAT_LEVEL";
+    public static final String PREFERENCES_SOCKET_CHECK = "SOCKET_CHECK";
+    public static final String PREFERENCES_TIMELIMIT_CHECK = "TIMELIMIT_CHECK";
+    public static final String PREFERENCES_LINE_ID = "LINE_ID";
+    public static final String PREFERENCES_STATION_POSITION = "STATION_NAME";
 
     /** android 6.0 request permission */
     public static final int REQUEST_PERMISSION = 2000;

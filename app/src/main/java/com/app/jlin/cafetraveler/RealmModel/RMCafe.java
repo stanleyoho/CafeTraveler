@@ -1,7 +1,5 @@
 package com.app.jlin.cafetraveler.RealmModel;
 
-import android.util.Log;
-
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.Utils.Utils;
@@ -341,14 +339,15 @@ public class RMCafe extends RealmObject implements Serializable {
     public static RealmResults<RMCafe> getFilterResult(Object[] checkChoice) {
         Realm realm = RealmManager.getInstance().getRealm();
         RealmQuery<RMCafe> query = realm.where(RMCafe.class);
-        int wifi, seat, quiet, lineType;
-        String stationName;
+        // 0:wifi(int) 1:seat(int) 2:socket(String) 3:timeLimit(String) 4:line(int) 5:station(String)
+        int wifi, seat, lineType;
+        String socket,timeLimit,stationName;
         wifi = (int) checkChoice[0];
         seat = (int) checkChoice[1];
-        quiet = (int) checkChoice[2];
-        lineType = (int) checkChoice[3];
-        Log.d("line",Integer.toString(lineType));
-        stationName = (String) checkChoice[4];
+        socket = (String) checkChoice[2];
+        timeLimit = (String) checkChoice[3];
+        lineType = (int) checkChoice[4];
+        stationName = (String) checkChoice[5];
         switch (lineType) {
             case Constants.LINE_BLUE:
                 query.equalTo("isBlueLine", true);
@@ -369,9 +368,10 @@ public class RMCafe extends RealmObject implements Serializable {
         if (stationName != null) {
             query.and().equalTo("myMrt", stationName);
         }
-        query.and().greaterThan("wifi", wifi);
-        query.and().greaterThan("seat", seat);
-        query.and().greaterThan("quiet", quiet);
+        query.and().greaterThanOrEqualTo("wifi", wifi);
+        query.and().greaterThanOrEqualTo("seat", seat);
+        query.and().equalTo("socket",socket);
+        query.and().equalTo("limited_time",timeLimit);
         return query.findAll();
     }
 }

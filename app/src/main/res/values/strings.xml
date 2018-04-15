@@ -14,7 +14,18 @@
     <string name="station_choice">請選擇站名：</string>
     <string name="if_wifi">是否有wifi？</string>
     <string name="if_seat">是否有座位？</string>
-    <string name="if_quiet">環境是否安靜？</string>
+    <string name="if_limit">是否限制用餐時間？</string>
+    <string name="if_socket">是否有插座？</string>
+
+    <string name="level_1">1\u2605</string>
+    <string name="level_2">2\u2605</string>
+    <string name="level_3">3\u2605</string>
+    <string name="level_4">4\u2605</string>
+    <string name="level_5">5\u2605</string>
+
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="maybe">或許(視情況)</string>
 
     <string-array name="line">
         <item>請選擇</item>
