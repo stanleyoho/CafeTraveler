@@ -1,5 +1,7 @@
 package com.app.jlin.cafetraveler.RealmModel;
 
+import android.util.Log;
+
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.Utils.Utils;
@@ -17,7 +19,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by jennifer on 2018/3/29.
  */
 
-public class RMCafe extends RealmObject implements Serializable{
+public class RMCafe extends RealmObject implements Serializable {
     @PrimaryKey
     private String id;
 
@@ -192,9 +194,13 @@ public class RMCafe extends RealmObject implements Serializable{
         this.open_time = open_time;
     }
 
-    public String getMyMrt() { return myMrt; }
+    public String getMyMrt() {
+        return myMrt;
+    }
 
-    public void setMyMrt(String myMrt) { this.myMrt = myMrt; }
+    public void setMyMrt(String myMrt) {
+        this.myMrt = myMrt;
+    }
 
     public boolean isRedLine() {
         return isRedLine;
@@ -240,13 +246,13 @@ public class RMCafe extends RealmObject implements Serializable{
         return mrtLine;
     }
 
-    public void setMrtLine(){
+    public void setMrtLine() {
         StringBuffer sb = new StringBuffer();
-        sb.append(isRedLine()?"紅 ":"")
-                .append(isBlueLine()?"藍 ":"")
-                .append(isGreenLine()?"綠 ":"")
-                .append(isBrownLine()?"咖啡 ":"")
-                .append(isOrangeLine()?"橘 ": "");
+        sb.append(isRedLine() ? "紅 " : "")
+                .append(isBlueLine() ? "藍 " : "")
+                .append(isGreenLine() ? "綠 " : "")
+                .append(isBrownLine() ? "咖啡 " : "")
+                .append(isOrangeLine() ? "橘 " : "");
         mrtLine = sb.toString();
     }
 
@@ -301,33 +307,71 @@ public class RMCafe extends RealmObject implements Serializable{
 
     /**
      * 取得某條或特定捷運站咖啡店
-     * @param lineType MrtType
+     *
+     * @param lineType    MrtType
      * @param stationName Station chinese name
      */
-    public static RealmResults<RMCafe> getFilterResultByLine(int lineType , String stationName){
+    public static RealmResults<RMCafe> getFilterResultByLine(int lineType, String stationName) {
         Realm realm = RealmManager.getInstance().getRealm();
         RealmQuery<RMCafe> query = realm.where(RMCafe.class);
 
-        switch (lineType){
+        switch (lineType) {
             case Constants.LINE_BLUE:
-                query.equalTo("isBlueLine",true);
+                query.equalTo("isBlueLine", true);
                 break;
             case Constants.LINE_BROWN:
-                query.equalTo("isBrownLine",true);
+                query.equalTo("isBrownLine", true);
                 break;
             case Constants.LINE_RED:
-                query.equalTo("isRedLine",true);
+                query.equalTo("isRedLine", true);
                 break;
             case Constants.LINE_GREEN:
-                query.equalTo("isGreenLine",true);
+                query.equalTo("isGreenLine", true);
                 break;
             case Constants.LINE_ORANGE:
-                query.equalTo("isOrangeLine",true);
+                query.equalTo("isOrangeLine", true);
                 break;
         }
-        if(stationName != null){
-            query.and().equalTo("myMrt",stationName);
+        if (stationName != null) {
+            query.and().equalTo("myMrt", stationName);
         }
+        return query.findAll();
+    }
+
+    public static RealmResults<RMCafe> getFilterResult(Object[] checkChoice) {
+        Realm realm = RealmManager.getInstance().getRealm();
+        RealmQuery<RMCafe> query = realm.where(RMCafe.class);
+        int wifi, seat, quiet, lineType;
+        String stationName;
+        wifi = (int) checkChoice[0];
+        seat = (int) checkChoice[1];
+        quiet = (int) checkChoice[2];
+        lineType = (int) checkChoice[3];
+        Log.d("line",Integer.toString(lineType));
+        stationName = (String) checkChoice[4];
+        switch (lineType) {
+            case Constants.LINE_BLUE:
+                query.equalTo("isBlueLine", true);
+                break;
+            case Constants.LINE_BROWN:
+                query.equalTo("isBrownLine", true);
+                break;
+            case Constants.LINE_RED:
+                query.equalTo("isRedLine", true);
+                break;
+            case Constants.LINE_GREEN:
+                query.equalTo("isGreenLine", true);
+                break;
+            case Constants.LINE_ORANGE:
+                query.equalTo("isOrangeLine", true);
+                break;
+        }
+        if (stationName != null) {
+            query.and().equalTo("myMrt", stationName);
+        }
+        query.and().greaterThan("wifi", wifi);
+        query.and().greaterThan("seat", seat);
+        query.and().greaterThan("quiet", quiet);
         return query.findAll();
     }
 }

@@ -37,7 +37,8 @@ public class CheckListActivity extends BaseActivity {
     private RealmResults<RMCafe> allCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
     private List<RMCafe> filterCafeList;
     private ArrayList<String> checkedList = new ArrayList<>();
-    private String[] redStationArray,blueStationArray,greenStationArray,orangeStationArray,brownStationArray;
+    private String[] redStationArray, blueStationArray, greenStationArray, orangeStationArray, brownStationArray;
+    private Object[] checkedChoice = new Object[5]; // 0:wifi 1:seat 2:quiet 3:line 4:station
     int selectedMrtType = -1;
 
     @Override
@@ -67,7 +68,7 @@ public class CheckListActivity extends BaseActivity {
         binding.btnCancel.setOnClickListener(btnEvent);
     }
 
-    private void initStationArray(){
+    private void initStationArray() {
         redStationArray = getLineStations(Constants.LINE_RED);
         blueStationArray = getLineStations(Constants.LINE_BLUE);
         greenStationArray = getLineStations(Constants.LINE_GREEN);
@@ -86,44 +87,31 @@ public class CheckListActivity extends BaseActivity {
                     binding.cbSeat.setChecked(true);
                     break;
                 case R.id.btn_ok:
-                    if (binding.cbWifi.isChecked() || binding.cbSeat.isChecked() || binding.cbQuiet.isChecked()) {
-                        for (RMCafe rmCafe : filterCafeList) {
-                            if (binding.cbWifi.isChecked()) {
-                                if (binding.cbSeat.isChecked()) {
-                                    if (binding.cbQuiet.isChecked()) {
-                                        if (rmCafe.getWifi() > 4 && rmCafe.getSeat() > 4 && rmCafe.getQuiet() > 4)
-                                            checkedList.add(rmCafe.getId());
-                                    } else {
-                                        if (rmCafe.getWifi() > 4 && rmCafe.getSeat() > 4)
-                                            checkedList.add(rmCafe.getId());
-                                    }
-                                } else {
-                                    if (binding.cbQuiet.isChecked()) {
-                                        if (rmCafe.getQuiet() > 4) checkedList.add(rmCafe.getId());
-                                    } else {
-                                        if (rmCafe.getWifi() > 4) checkedList.add(rmCafe.getId());
-                                    }
-                                }
-                            } else if (binding.cbSeat.isChecked()) {
-                                if (binding.cbQuiet.isChecked()) {
-                                    if (rmCafe.getSeat() > 4 && rmCafe.getQuiet() > 4)
-                                        checkedList.add(rmCafe.getId());
-                                } else {
-                                    if (rmCafe.getSeat() > 4) checkedList.add(rmCafe.getId());
-                                }
-                            } else if (binding.cbQuiet.isChecked()) {
-                                if (rmCafe.getQuiet() > 4) checkedList.add(rmCafe.getId());
-                            }
-                        }
-                        Log.d("checkedListSize", Integer.toString(checkedList.size()));
-                        Intent intent = new Intent();
-                        intent.putStringArrayListExtra("checkedCafeList", checkedList);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                    checkedChoice[3] = selectedMrtType;
+                    if (binding.cbWifi.isChecked()) {
+                        checkedChoice[0] = 4;
                     } else {
-                        setResult(RESULT_CANCELED);
-                        finish();
+                        checkedChoice[0] = 1;
                     }
+                    if (binding.cbSeat.isChecked()) {
+                        checkedChoice[1] = 4;
+                    } else {
+                        checkedChoice[1] = 1;
+                    }
+                    if (binding.cbQuiet.isChecked()) {
+                        checkedChoice[2] = 4;
+                    } else {
+                        checkedChoice[2] = 1;
+                    }
+                    filterCafeList = RMCafe.getFilterResult(checkedChoice);
+                    for (RMCafe rmCafe : filterCafeList) {
+                        checkedList.add(rmCafe.getId());
+                    }
+                    Log.d("checkedListSize", Integer.toString(checkedList.size()));
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("checkedCafeList", checkedList);
+                    setResult(RESULT_OK, intent);
+                    finish();
                     break;
                 case R.id.btn_cancel:
                     setResult(RESULT_CANCELED);
@@ -153,31 +141,31 @@ public class CheckListActivity extends BaseActivity {
                         RMCafe[] tempArray = new RMCafe[allCafeList.size()];
                         allCafeList.toArray(tempArray);
                         filterCafeList = Arrays.asList(tempArray);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,new String[0]);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, new String[0]);
                         break;
                     case 1:
                         filterCafeList = lineFilter(Constants.LINE_RED);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,redStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, redStationArray);
                         selectedMrtType = Constants.LINE_RED;
                         break;
                     case 2:
                         filterCafeList = lineFilter(Constants.LINE_BROWN);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,brownStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, brownStationArray);
                         selectedMrtType = Constants.LINE_BROWN;
                         break;
                     case 3:
                         filterCafeList = lineFilter(Constants.LINE_GREEN);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,greenStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, greenStationArray);
                         selectedMrtType = Constants.LINE_GREEN;
                         break;
                     case 4:
                         filterCafeList = lineFilter(Constants.LINE_ORANGE);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,orangeStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, orangeStationArray);
                         selectedMrtType = Constants.LINE_ORANGE;
                         break;
                     case 5:
                         filterCafeList = lineFilter(Constants.LINE_BLUE);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item,blueStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, blueStationArray);
                         selectedMrtType = Constants.LINE_BLUE;
                         break;
                 }
@@ -191,13 +179,13 @@ public class CheckListActivity extends BaseActivity {
         });
     }
 
-    private ArrayList<RMCafe> lineFilter(int line){
+    private ArrayList<RMCafe> lineFilter(int line) {
         ArrayList<RMCafe> tempList = new ArrayList<>();
-        tempList.addAll(RMCafe.getFilterResultByLine(line,null));
+        tempList.addAll(RMCafe.getFilterResultByLine(line, null));
         return tempList;
     }
 
-    private String[]  getLineStations(int lineId){
+    private String[] getLineStations(int lineId) {
         List<String> redLineStations = new ArrayList<>();
         List<String> blueLineStations = new ArrayList<>();
         List<String> greenLineStations = new ArrayList<>();
@@ -211,36 +199,36 @@ public class CheckListActivity extends BaseActivity {
         brownLineStations.add(getResources().getString(R.string.filter_choice));
 
         InputStream is = null;
-        try{
+        try {
             is = getAssets().open("mrt_final.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            String data = new String(buffer,"UTF-8");
+            String data = new String(buffer, "UTF-8");
             JSONArray jsonArray = new JSONArray(data);
-            for(int i = 0 ; i < jsonArray.length() ; i++){
+            for (int i = 0; i < jsonArray.length(); i++) {
                 MrtModel mrtModel = new Gson().fromJson(jsonArray.get(i).toString(), MrtModel.class);
-                if(mrtModel.getStation_line_id().equals("BR")) {
+                if (mrtModel.getStation_line_id().equals("BR")) {
                     brownLineStations.add(mrtModel.getStation_name_chinese());
                 }
-                if(mrtModel.getStation_line_id().equals("R")) {
+                if (mrtModel.getStation_line_id().equals("R")) {
                     redLineStations.add(mrtModel.getStation_name_chinese());
                 }
-                if(mrtModel.getStation_line_id().equals("G")) {
+                if (mrtModel.getStation_line_id().equals("G")) {
                     greenLineStations.add(mrtModel.getStation_name_chinese());
                 }
-                if(mrtModel.getStation_line_id().equals("O")) {
+                if (mrtModel.getStation_line_id().equals("O")) {
                     orangeLineStations.add(mrtModel.getStation_name_chinese());
                 }
-                if(mrtModel.getStation_line_id().equals("BL")) {
+                if (mrtModel.getStation_line_id().equals("BL")) {
                     blueLineStations.add(mrtModel.getStation_name_chinese());
                 }
             }
-        }catch (Exception e){
-            LogUtils.e("Exception",e.toString());
+        } catch (Exception e) {
+            LogUtils.e("Exception", e.toString());
         }
-        switch (lineId){
+        switch (lineId) {
             case Constants.LINE_BLUE:
                 return blueLineStations.toArray(new String[blueLineStations.size()]);
             case Constants.LINE_RED:
@@ -259,15 +247,10 @@ public class CheckListActivity extends BaseActivity {
     private AdapterView.OnItemSelectedListener ItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if(position == 0){
-                filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,null);
-            }else{
-                String station = parent.getSelectedItem().toString();
-                filterCafeList = RMCafe.getFilterResultByLine(selectedMrtType,station);
-                LogUtils.e("filterCafeList", String.valueOf(filterCafeList.size()));
-                for(RMCafe rmCafe : filterCafeList){
-                    LogUtils.e("cafe name : " , rmCafe.getMyMrt());
-                }
+            if (position == 0) {
+                checkedChoice[4] = null;
+            } else {
+                checkedChoice[4] = parent.getSelectedItem().toString();
             }
         }
 
