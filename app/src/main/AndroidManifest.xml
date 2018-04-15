@@ -35,7 +35,8 @@
 
         <service android:name=".Service.TestService" />
 
-        <activity android:name=".Activity.IntroActivity">
+        <activity android:name=".Activity.IntroActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

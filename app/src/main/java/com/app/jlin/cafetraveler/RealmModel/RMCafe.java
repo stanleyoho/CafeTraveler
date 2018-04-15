@@ -300,6 +300,16 @@ public class RMCafe extends RealmObject implements Serializable{
     }
 
     /**
+     * 刪除全部訊息
+     */
+    public static void deleteOne(String id){
+        Realm realm = RealmManager.getInstance().getRealm();
+        RealmResults<RMCafe> cafeList = realm.where(RMCafe.class).equalTo("id",id).findAll();
+        realm.beginTransaction();
+        cafeList.deleteAllFromRealm();
+        realm.commitTransaction();
+    }
+    /**
      * 取得某條或特定捷運站咖啡店
      * @param lineType MrtType
      * @param stationName Station chinese name
