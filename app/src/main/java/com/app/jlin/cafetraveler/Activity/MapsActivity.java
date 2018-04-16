@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
+import com.app.jlin.cafetraveler.Adapter.MapInfoAdapter;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.R;
@@ -145,6 +146,8 @@ public class MapsActivity extends FragmentActivity {
                     mMap.animateCamera(cameraUpdate);
                 }
             });
+
+            mMap.setInfoWindowAdapter(new MapInfoAdapter(MapsActivity.this));
         }
     };
 

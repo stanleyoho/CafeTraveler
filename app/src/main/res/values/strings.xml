@@ -11,6 +11,8 @@
 
     <string name="filter_choice">請選擇</string>
 
+    <string name="rank_view_title">%1$s : </string>
+
     <string name="line_choice">請選擇線：</string>
     <string name="station_choice">請選擇站名：</string>
     <string name="if_wifi">是否有wifi？</string>

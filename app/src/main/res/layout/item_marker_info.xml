@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.app.jlin.cafetraveler.CustomView.RankView
+            android:id="@+id/rank_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:title="wifi"/>
+
+        <com.app.jlin.cafetraveler.CustomView.RankView
+            android:id="@+id/rank_seat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:title="seat"/>
+
+        <com.app.jlin.cafetraveler.CustomView.RankView
+            android:id="@+id/rank_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:title="money"/>
+
+    </LinearLayout>
+</layout>
