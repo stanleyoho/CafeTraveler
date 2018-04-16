@@ -13,9 +13,10 @@
     <string name="line_choice">請選擇線：</string>
     <string name="station_choice">請選擇站名：</string>
     <string name="if_wifi">是否有wifi？</string>
-    <string name="if_seat">是否有座位？</string>
+    <string name="if_seat">座位數量</string>
     <string name="if_limit">是否限制用餐時間？</string>
     <string name="if_socket">是否有插座？</string>
+    <string name="if_cheap">消費金額</string>
 
     <string name="level_1">1\u2605</string>
     <string name="level_2">2\u2605</string>

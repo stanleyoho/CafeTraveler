@@ -349,15 +349,16 @@ public class RMCafe extends RealmObject implements Serializable {
     public static RealmResults<RMCafe> getFilterResult(Object[] checkChoice) {
         Realm realm = RealmManager.getInstance().getRealm();
         RealmQuery<RMCafe> query = realm.where(RMCafe.class);
-        // 0:wifi(int) 1:seat(int) 2:socket(String) 3:timeLimit(String) 4:line(int) 5:station(String)
-        int wifi, seat, lineType;
+        // 0:wifi(int) 1:seat(int) 2: cheap(int) 3:socket(String) 4:timeLimit(String) 5:line(int) 6:station(int)
+        int wifi, seat, cheap, lineType;
         String socket,timeLimit,stationName;
         wifi = (int) checkChoice[0];
         seat = (int) checkChoice[1];
-        socket = (String) checkChoice[2];
-        timeLimit = (String) checkChoice[3];
-        lineType = (int) checkChoice[4];
-        stationName = (String) checkChoice[5];
+        cheap = (int) checkChoice[2];
+        socket = (String) checkChoice[3];
+        timeLimit = (String) checkChoice[4];
+        lineType = (int) checkChoice[5];
+        stationName = (String) checkChoice[6];
         switch (lineType) {
             case Constants.LINE_BLUE:
                 query.equalTo("isBlueLine", true);
@@ -380,6 +381,7 @@ public class RMCafe extends RealmObject implements Serializable {
         }
         query.and().greaterThanOrEqualTo("wifi", wifi);
         query.and().greaterThanOrEqualTo("seat", seat);
+        query.and().greaterThanOrEqualTo("cheap",cheap);
         query.and().equalTo("socket",socket);
         query.and().equalTo("limited_time",timeLimit);
         return query.findAll();

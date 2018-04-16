@@ -12,10 +12,18 @@ import com.app.jlin.cafetraveler.R;
 
 public class FilterCheckPreferences {
     private SharedPreferences checkedFilter;
+    private static FilterCheckPreferences filterCheckPreferences;
     private Context mContext;
     private SharedPreferences.Editor filterEditor;
 
-    public FilterCheckPreferences(Context context){
+    public static FilterCheckPreferences getInstance(Context context){
+        if(filterCheckPreferences == null){
+            filterCheckPreferences = new FilterCheckPreferences(context);
+        }
+        return filterCheckPreferences;
+    }
+
+    private FilterCheckPreferences(Context context){
         this.checkedFilter = context.getApplicationContext().getSharedPreferences(Constants.FILTER_CHECKED_PREFERENCES,Context.MODE_PRIVATE);
         this.mContext = context;
         filterEditor = this.checkedFilter.edit();
@@ -37,6 +45,15 @@ public class FilterCheckPreferences {
 
     public int getSeat(){
         return this.checkedFilter.getInt(Constants.PREFERENCES_SEAT_LEVEL,R.id.radio_seat_lv1);
+    }
+
+    public void setCheap(int cheap){
+        filterEditor.putInt(Constants.PREFERENCES_CHEAP_LEVEL,cheap);
+        filterEditor.apply();
+    }
+
+    public int getCheap(){
+        return this.checkedFilter.getInt(Constants.PREFERENCES_CHEAP_LEVEL,R.id.radio_cheap_lv1);
     }
 
     public void setSocket(int socket){

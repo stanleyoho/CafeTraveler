@@ -13,17 +13,11 @@ import android.widget.RadioGroup;
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.MrtDataManager;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
-import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.SharePreferences.FilterCheckPreferences;
-import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.databinding.ActivityCheckListBinding;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
-
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,8 +35,8 @@ public class CheckListActivity extends BaseActivity {
     private List<RMCafe> filterCafeList;
     private ArrayList<String> checkedList = new ArrayList<>();
     private String[] redStationArray, blueStationArray, greenStationArray, orangeStationArray, brownStationArray;
-    private Object[] checkedChoice = new Object[6]; // 0:wifi 1:seat 2:socket 3:timeLimit 4:line 5:station
-    private int wifi,seat;
+    private Object[] checkedChoice = new Object[7]; // 0:wifi 1:seat 2: cheap 3:socket 4:timeLimit 5:line 6:station
+    private int wifi,seat,cheap,stationPosition;
     private String socket,timeLimit;
     int selectedMrtType = -1;
 
@@ -50,7 +44,7 @@ public class CheckListActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_check_list);
-        preferences = new FilterCheckPreferences(this);
+        preferences = FilterCheckPreferences.getInstance(this);
         initRadioGroup();
         initEvent();
         initFirstSpinner();
@@ -61,20 +55,16 @@ public class CheckListActivity extends BaseActivity {
         super.onResume();
         binding.rgWifi.check(preferences.getWifi());
         binding.rgSeat.check(preferences.getSeat());
+        binding.rgCheap.check(preferences.getCheap());
         binding.rgSocket.check(preferences.getSocket());
         binding.rgTimeLimit.check(preferences.getTimeLimit());
         binding.spLine.setSelection(preferences.getLine());
-//        binding.spStation.setSelection(preferences.getStation());
+//        binding.spStation.setSelection(preferences.getStation(),true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        preferences.setWifi(R.id.radio_wifi_lv1);
-        preferences.setSeat(R.id.radio_seat_lv1);
-        preferences.setSocket(R.id.radio_socket_no);
-        preferences.setTimeLimit(R.id.radio_timeLimit_no);
-        preferences.setLine(0);
     }
 
     private void initRadioGroup() {
@@ -84,6 +74,9 @@ public class CheckListActivity extends BaseActivity {
         binding.rgSeat.check(R.id.radio_seat_lv1);
         seat = 1;
         binding.rgSeat.setOnCheckedChangeListener(new onSeatChangeListener());
+        binding.rgCheap.check(R.id.radio_cheap_lv1);
+        cheap = 1;
+        binding.rgCheap.setOnCheckedChangeListener(new onCheapChangeListener());
         binding.rgSocket.check(R.id.radio_socket_no);
         socket = "no";
         binding.rgSocket.setOnCheckedChangeListener(new onSocketChangeListener());
@@ -113,9 +106,10 @@ public class CheckListActivity extends BaseActivity {
                 case R.id.btn_ok:
                     checkedChoice[0] = wifi;
                     checkedChoice[1] = seat;
-                    checkedChoice[2] = socket;
-                    checkedChoice[3] = timeLimit;
-                    checkedChoice[4] = selectedMrtType;
+                    checkedChoice[2] = cheap;
+                    checkedChoice[3] = socket;
+                    checkedChoice[4] = timeLimit;
+                    checkedChoice[5] = selectedMrtType;
                     filterCafeList = RMCafe.getFilterResult(checkedChoice);
                     for (RMCafe rmCafe : filterCafeList) {
                         checkedList.add(rmCafe.getId());
@@ -124,6 +118,7 @@ public class CheckListActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra("checkedCafeList", checkedList);
                     setResult(RESULT_OK, intent);
+//        preferences.setStation(stationPosition);
                     finish();
                     break;
                 case R.id.btn_cancel:
@@ -139,9 +134,11 @@ public class CheckListActivity extends BaseActivity {
         super.onPause();
         preferences.setWifi(binding.rgWifi.getCheckedRadioButtonId());
         preferences.setSeat(binding.rgSeat.getCheckedRadioButtonId());
+        preferences.setCheap(binding.rgCheap.getCheckedRadioButtonId());
         preferences.setSocket(binding.rgSocket.getCheckedRadioButtonId());
         preferences.setTimeLimit(binding.rgTimeLimit.getCheckedRadioButtonId());
         preferences.setLine(selectedMrtType);
+//        preferences.setStation(stationPosition);
     }
 
     private void initFirstSpinner() {
@@ -151,7 +148,6 @@ public class CheckListActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ArrayAdapter<String> stationSpinnerAdapter = null;
-//                preferences.setLine(i);
                 switch (i) {
                     case 0:
                         RMCafe[] tempArray = new RMCafe[allCafeList.size()];
@@ -211,7 +207,7 @@ public class CheckListActivity extends BaseActivity {
             } else {
                 checkedChoice[5] = parent.getSelectedItem().toString();
             }
-//           preferences.setStation(position);
+           stationPosition = position;
         }
 
         @Override
@@ -262,6 +258,30 @@ public class CheckListActivity extends BaseActivity {
                     break;
                 case R.id.radio_seat_lv5:
                     seat = 5;
+                    break;
+            }
+        }
+    }
+
+    private class onCheapChangeListener implements RadioGroup.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int i) {
+            switch (i){
+                case R.id.radio_cheap_lv1:
+                    cheap = 1;
+                    break;
+                case R.id.radio_cheap_lv2:
+                    cheap = 2;
+                    break;
+                case R.id.radio_cheap_lv3:
+                    cheap = 3;
+                    break;
+                case R.id.radio_cheap_lv4:
+                    cheap = 4;
+                    break;
+                case R.id.radio_cheap_lv5:
+                    cheap = 5;
                     break;
             }
         }
