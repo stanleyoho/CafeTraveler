@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/CafeTraveler.iml" filepath="$PROJECT_DIR$/.idea/CafeTraveler.iml" />
       <module fileurl="file://$PROJECT_DIR$/CafeTraveler.iml" filepath="$PROJECT_DIR$/CafeTraveler.iml" />
+      <module fileurl="file://C:\Users\Stanley_NB\Desktop\MyAndroid\CafeTraveler\CafeTraveler.iml" filepath="C:\Users\Stanley_NB\Desktop\MyAndroid\CafeTraveler\CafeTraveler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Stanley_NB\Desktop\MyAndroid\CafeTraveler\app\app.iml" filepath="C:\Users\Stanley_NB\Desktop\MyAndroid\CafeTraveler\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

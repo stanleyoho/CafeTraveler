@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 
 import com.app.jlin.cafetraveler.Constants.Constants;
+import com.app.jlin.cafetraveler.Manager.MrtDataManager;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
@@ -51,7 +52,6 @@ public class CheckListActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_check_list);
         preferences = new FilterCheckPreferences(this);
         initRadioGroup();
-        initStationArray();
         initEvent();
         initFirstSpinner();
     }
@@ -97,14 +97,6 @@ public class CheckListActivity extends BaseActivity {
         binding.btnCheckAll.setOnClickListener(btnEvent);
         binding.btnOk.setOnClickListener(btnEvent);
         binding.btnCancel.setOnClickListener(btnEvent);
-    }
-
-    private void initStationArray() {
-        redStationArray = getLineStations(Constants.LINE_RED);
-        blueStationArray = getLineStations(Constants.LINE_BLUE);
-        greenStationArray = getLineStations(Constants.LINE_GREEN);
-        orangeStationArray = getLineStations(Constants.LINE_ORANGE);
-        brownStationArray = getLineStations(Constants.LINE_BROWN);
     }
 
     private class BtnEvent implements View.OnClickListener {
@@ -170,27 +162,27 @@ public class CheckListActivity extends BaseActivity {
                         break;
                     case 1:
                         filterCafeList = lineFilter(Constants.LINE_RED);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, redStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, MrtDataManager.getInstance().getRedStationArray());
                         selectedMrtType = Constants.LINE_RED;
                         break;
                     case 2:
                         filterCafeList = lineFilter(Constants.LINE_BROWN);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, brownStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, MrtDataManager.getInstance().getBrownStationArray());
                         selectedMrtType = Constants.LINE_BROWN;
                         break;
                     case 3:
                         filterCafeList = lineFilter(Constants.LINE_GREEN);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, greenStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, MrtDataManager.getInstance().getGreenStationArray());
                         selectedMrtType = Constants.LINE_GREEN;
                         break;
                     case 4:
                         filterCafeList = lineFilter(Constants.LINE_ORANGE);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, orangeStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, MrtDataManager.getInstance().getOrangeStationArray());
                         selectedMrtType = Constants.LINE_ORANGE;
                         break;
                     case 5:
                         filterCafeList = lineFilter(Constants.LINE_BLUE);
-                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, blueStationArray);
+                        stationSpinnerAdapter = new ArrayAdapter<String>(CheckListActivity.this, android.R.layout.simple_spinner_item, MrtDataManager.getInstance().getBlueStationArray());
                         selectedMrtType = Constants.LINE_BLUE;
                         break;
                 }
@@ -210,64 +202,6 @@ public class CheckListActivity extends BaseActivity {
         return tempList;
     }
 
-    private String[] getLineStations(int lineId) {
-        List<String> redLineStations = new ArrayList<>();
-        List<String> blueLineStations = new ArrayList<>();
-        List<String> greenLineStations = new ArrayList<>();
-        List<String> orangeLineStations = new ArrayList<>();
-        List<String> brownLineStations = new ArrayList<>();
-
-        redLineStations.add(getResources().getString(R.string.filter_choice));
-        blueLineStations.add(getResources().getString(R.string.filter_choice));
-        greenLineStations.add(getResources().getString(R.string.filter_choice));
-        orangeLineStations.add(getResources().getString(R.string.filter_choice));
-        brownLineStations.add(getResources().getString(R.string.filter_choice));
-
-        InputStream is = null;
-        try {
-            is = getAssets().open("mrt_final.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String data = new String(buffer, "UTF-8");
-            JSONArray jsonArray = new JSONArray(data);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                MrtModel mrtModel = new Gson().fromJson(jsonArray.get(i).toString(), MrtModel.class);
-                if (mrtModel.getStation_line_id().equals("BR")) {
-                    brownLineStations.add(mrtModel.getStation_name_chinese());
-                }
-                if (mrtModel.getStation_line_id().equals("R")) {
-                    redLineStations.add(mrtModel.getStation_name_chinese());
-                }
-                if (mrtModel.getStation_line_id().equals("G")) {
-                    greenLineStations.add(mrtModel.getStation_name_chinese());
-                }
-                if (mrtModel.getStation_line_id().equals("O")) {
-                    orangeLineStations.add(mrtModel.getStation_name_chinese());
-                }
-                if (mrtModel.getStation_line_id().equals("BL")) {
-                    blueLineStations.add(mrtModel.getStation_name_chinese());
-                }
-            }
-        } catch (Exception e) {
-            LogUtils.e("Exception", e.toString());
-        }
-        switch (lineId) {
-            case Constants.LINE_BLUE:
-                return blueLineStations.toArray(new String[blueLineStations.size()]);
-            case Constants.LINE_RED:
-                return redLineStations.toArray(new String[redLineStations.size()]);
-            case Constants.LINE_GREEN:
-                return greenLineStations.toArray(new String[greenLineStations.size()]);
-            case Constants.LINE_ORANGE:
-                return orangeLineStations.toArray(new String[orangeLineStations.size()]);
-            case Constants.LINE_BROWN:
-                return brownLineStations.toArray(new String[brownLineStations.size()]);
-            default:
-                return null;
-        }
-    }
 
     private AdapterView.OnItemSelectedListener ItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.app.jlin.cafetraveler.Manager.MrtDataManager;
+
 import io.realm.Realm;
 
 /**
@@ -17,6 +19,8 @@ public class CafeTravelerApplication extends Application{
         super.onCreate();
 
         Realm.init(this);
+
+        MrtDataManager.getInstance().initData(this);
 
         registerActivityLifecycleCallbacks(new ActivityLifeCycleStateCallBack());
     }

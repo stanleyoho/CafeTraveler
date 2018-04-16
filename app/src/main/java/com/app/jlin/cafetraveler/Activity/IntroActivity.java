@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.app.jlin.cafetraveler.Constants.UrlConstants;
+import com.app.jlin.cafetraveler.Manager.MrtDataManager;
 import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
@@ -124,7 +125,7 @@ public class IntroActivity extends BaseActivity {
                     String finalMrt = "";
                     String finalMrtId;
                     CheckLineUtils checkLineUtils = new CheckLineUtils();
-                    List<MrtModel> mrtModelList = getMrtJsonList();
+                    List<MrtModel> mrtModelList = MrtDataManager.getInstance().getMrtInfoList();
                     for (MrtModel mrtModel : mrtModelList) {
                         //判斷離哪個捷運站最近
                         double tempDistance = Utils.GetDistance(rmCafe.getLatitude(), rmCafe.getLongitude(), mrtModel.getLatitude(), mrtModel.getLongitude());
@@ -161,31 +162,6 @@ public class IntroActivity extends BaseActivity {
             postToNextActivity();
         }
     };
-
-    /**
-     * 取得json file內所有捷運站的List
-     */
-    private List<MrtModel> getMrtJsonList() {
-        List<MrtModel> mrtList = new ArrayList<>();
-
-        InputStream is = null;
-        try {
-            is = getAssets().open("mrt_final.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String mrtData = new String(buffer, "UTF-8");
-            JSONArray mrtJsonArray = new JSONArray(mrtData);
-            for (int i = 0; i < mrtJsonArray.length(); i++) {
-                MrtModel mrtModel = new Gson().fromJson(mrtJsonArray.get(i).toString(), MrtModel.class);
-                mrtList.add(mrtModel);
-            }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        return mrtList;
-    }
 
     private class ProgressHandler extends Handler {
         private ProgressDialog mProgressDialog;
