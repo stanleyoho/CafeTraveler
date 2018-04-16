@@ -56,10 +56,11 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             final RMCafe rmCafe = cafeList.get(position);
             CafeViewModel cafeViewModel = new CafeViewModel();
             cafeViewModel.setName(context.getString(R.string.cafe_name,rmCafe.getName()));
-            cafeViewModel.setLat(context.getString(R.string.cafe_lat,rmCafe.getLatitude()));
-            cafeViewModel.setLon(context.getString(R.string.cafe_lon,rmCafe.getLongitude()));
+//            cafeViewModel.setLat(context.getString(R.string.cafe_lat,rmCafe.getLatitude()));
+//            cafeViewModel.setLon(context.getString(R.string.cafe_lon,rmCafe.getLongitude()));
             cafeViewModel.setMrt(context.getString(R.string.cafe_mrt,rmCafe.getMyMrt()));
             cafeViewModel.setLine(context.getString(R.string.cafe_line,rmCafe.getMrtLine()));
+            cafeViewModel.setOpenTime(context.getString(R.string.cafe_open_time,rmCafe.getOpen_time()));
             cafeVH.binding.setViewModel(cafeViewModel);
             if(cafeListCallBack != null){
                 cafeVH.binding.layout.setOnClickListener(new View.OnClickListener() {

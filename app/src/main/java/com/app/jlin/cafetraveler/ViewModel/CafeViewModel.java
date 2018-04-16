@@ -11,10 +11,11 @@ import com.app.jlin.cafetraveler.BR;
 
 public class CafeViewModel extends BaseObservable{
     private String name;
-    private String lon;
-    private String lat;
+//    private String lon;
+//    private String lat;
     private String mrt;
     private String line;
+    private String openTime;
 
     @Bindable
     public String getName() {
@@ -26,25 +27,25 @@ public class CafeViewModel extends BaseObservable{
         notifyPropertyChanged(BR.name);
     }
 
-    @Bindable
-    public String getLon() {
-        return lon;
-    }
-
-    public void setLon(String lon) {
-        this.lon = lon;
-        notifyPropertyChanged(BR.lon);
-    }
-
-    @Bindable
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-        notifyPropertyChanged(BR.lat);
-    }
+//    @Bindable
+//    public String getLon() {
+//        return lon;
+//    }
+//
+//    public void setLon(String lon) {
+//        this.lon = lon;
+//        notifyPropertyChanged(BR.lon);
+//    }
+//
+//    @Bindable
+//    public String getLat() {
+//        return lat;
+//    }
+//
+//    public void setLat(String lat) {
+//        this.lat = lat;
+//        notifyPropertyChanged(BR.lat);
+//    }
 
     @Bindable
     public String getMrt() {
@@ -64,5 +65,15 @@ public class CafeViewModel extends BaseObservable{
     public void setLine(String line) {
         this.line = line;
         notifyPropertyChanged(BR.line);
+    }
+
+    @Bindable
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+        notifyPropertyChanged(BR.openTime);
     }
 }
