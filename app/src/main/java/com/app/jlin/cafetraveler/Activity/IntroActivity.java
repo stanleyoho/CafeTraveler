@@ -90,30 +90,6 @@ public class IntroActivity extends BaseActivity {
             Log.e("jsonElements", String.valueOf(jsonElements.size()));
             Log.e("RMCafe.getAll", String.valueOf(RMCafe.getAll().size()));
 
-            ///////////////////data analytics test///////////////////
-            Map<String, RMCafe> localDbMap = new HashMap<>();
-            Map<String, RMCafe> remoteDbMap = new HashMap<>();
-            List<RMCafe> differentList = new ArrayList<>();
-
-            LogUtils.e("different Start", String.valueOf(differentList.size()));
-
-            for (RMCafe cafe : RMCafe.getAll()) {
-                localDbMap.put(cafe.getId(), cafe);
-            }
-
-            for (int i = 0; i < jsonElements.size(); i++) {
-                RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
-                remoteDbMap.put(rmCafe.getId(), rmCafe);
-            }
-
-            for (Object key : remoteDbMap.keySet()) {
-                if (localDbMap.get(key) == null) {
-                    differentList.add(remoteDbMap.get(key));
-                }
-            }
-            LogUtils.e("different End", String.valueOf(differentList.size()));
-            ///////////////////data analytics test///////////////////
-
             //資料數量不一樣在做處理
             if (jsonElements.size() != RMCafe.getAll().size()) {
                 progressHandler.setTotal(jsonElements.size());
@@ -202,12 +178,5 @@ public class IntroActivity extends BaseActivity {
                 finish();
             }
         }, 1000);
-    }
-
-    ///////////////////data analytics test///////////////////
-    private void checkDifferentCafeData() {
-        Map<String, RMCafe> localDbMap = new HashMap<>();
-        Map<String, RMCafe> remoteDbMap = new HashMap<>();
-        List<RMCafe> differentList = new ArrayList<>();
     }
 }
