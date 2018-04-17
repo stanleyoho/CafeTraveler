@@ -39,7 +39,6 @@ public class RankView extends LinearLayout {
         rank = typedArray.getInt(R.styleable.rankView_rank,5);
         int color = typedArray.getColor(R.styleable.rankView_background,0);
         String title = typedArray.getString(R.styleable.rankView_title);
-//        setRankIcon(rank);
         binding.textTitle.setText(context.getString(R.string.rank_view_title,title));
         setBackgroundColor(color);
     }
