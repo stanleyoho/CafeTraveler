@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,14 @@ import android.view.ViewGroup;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.Tag.MyMarkerTag;
 import com.app.jlin.cafetraveler.ViewModel.CafeViewModel;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerBinding;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerEmptyBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -107,18 +108,46 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if(!markerOps.isEmpty()){
             map.clear();
             markerOps.clear();
-            Log.d("inMarkersClear",Integer.toString(markerOps.size()));
         }
-        if(isChecked) addMarker(context,cafeList,map,markerOps);
-        for(MarkerOptions markerOptions : markerOps){
-            map.addMarker(markerOptions);
-            Log.d("inAddMarker","add new markers");
+//        if(isChecked) addMarkerOption(context,cafeList,map,markerOps);
+//        for(MarkerOptions markerOptions : markerOps){
+//            map.addMarker(markerOptions);
+//        }
+        if(isChecked){
+            for(RMCafe rmCafe : cafeList){
+                MarkerOptions markerOption = addMarkerOption(context,rmCafe,map);
+                Marker marker = map.addMarker(markerOption);
+
+                MyMarkerTag markerTag = new MyMarkerTag();
+                markerTag.setName(rmCafe.getName());
+                markerTag.setWifi(rmCafe.getWifi());
+                markerTag.setCheap(rmCafe.getCheap());
+                markerTag.setSeat(rmCafe.getSeat());
+                marker.setTag(markerTag);
+            }
         }
         notifyDataSetChanged();
     }
 
-    private void addMarker(Context context,List<RMCafe> cafeList, GoogleMap map,List<MarkerOptions> markerOps) {
-        for(RMCafe rmCafe : cafeList){
+//    private void addMarkerOption(Context context, List<RMCafe> cafeList, GoogleMap map, List<MarkerOptions> markerOps) {
+//        for(RMCafe rmCafe : cafeList){
+//            LatLng place = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
+//            String title = rmCafe.getName();
+//            BitmapDrawable icon = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_mymarker);
+//            Bitmap bitmap = icon.getBitmap();
+//            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,80,160,false);
+//
+//            MarkerOptions markerOptions = new MarkerOptions();
+//            markerOptions.position(place)
+//                    .title(title)
+//                    .icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+//            markerOps.add(markerOptions);
+//        }
+//        Log.d("inAddMarkerOptions",Integer.toString(markerOps.size()));
+//    }
+
+    private MarkerOptions addMarkerOption(Context context, RMCafe rmCafe, GoogleMap map) {
+
             LatLng place = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
             String title = rmCafe.getName();
             BitmapDrawable icon = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_mymarker);
@@ -130,7 +159,6 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     .title(title)
                     .icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
             markerOps.add(markerOptions);
-        }
-        Log.d("inAddMarkerOptions",Integer.toString(markerOps.size()));
+            return markerOptions;
     }
 }

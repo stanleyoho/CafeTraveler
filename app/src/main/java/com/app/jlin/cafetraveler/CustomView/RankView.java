@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,13 +44,15 @@ public class RankView extends LinearLayout {
     }
 
     public void setRank(int rank){
+        Log.d("setRank",""+ rank);
         int nowRank = rank;
         if(rank > 5){
             nowRank = 5;
         }
         for(int i = 4 ; i < nowRank -1 ; i-- ){
-            ImageView ivRank = (ImageView)binding.layoutLinear.getChildAt(i);
+            ImageView ivRank = (ImageView) binding.layoutLinear.getChildAt(i);
             ivRank.setVisibility(View.INVISIBLE);
         }
+        requestLayout();
     }
 }

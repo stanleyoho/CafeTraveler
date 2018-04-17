@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,10 +29,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,19 +149,20 @@ public class MapsActivity extends FragmentActivity {
 
     private CafeListCallBack cafeListCallBack = new CafeListCallBack() {
         private Marker marker;
-
         @Override
         public void moveToPosition(RMCafe rmCafe) {
-            if (marker != null) {
-                marker.remove();      //如果已存在標記則先清除
-            }
-            LatLng cafeLat = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
-            BitmapDrawable icon = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_mymarker_focus);
-            Bitmap bitmap = icon.getBitmap();
-            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,120,240,false);
-            MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName()).icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
-            marker = mMap.addMarker(markerOptions);
-            marker.setTag(0);
+//            /**
+//             *點擊RecyclerView上的咖啡店時，新增一個大marker (暫移除)
+//             */
+//              if (marker != null) {
+//                marker.remove();      //如果已存在標記則先清除
+//            }
+//            LatLng cafeLat = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
+//            BitmapDrawable icon = (BitmapDrawable)getResources().getDrawable(R.drawable.ic_mymarker_focus);
+//            Bitmap bitmap = icon.getBitmap();
+//            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,120,240,false);
+//            MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName()).icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+//            marker = mMap.addMarker(markerOptions);
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude()), 18);
             mMap.animateCamera(cameraUpdate);
         }
