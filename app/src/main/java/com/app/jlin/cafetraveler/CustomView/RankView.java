@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.databinding.LayoutRankBinding;
@@ -19,8 +20,7 @@ import com.app.jlin.cafetraveler.databinding.LayoutRankBinding;
  */
 
 public class RankView extends LinearLayout {
-    private LayoutRankBinding binding;
-    private int rank;
+//    private int rank;
 
     public RankView(Context context) {
         this(context,null);
@@ -32,33 +32,36 @@ public class RankView extends LinearLayout {
 
     public RankView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.layout_rank,this,true);
+        inflate(context,R.layout.layout_rank,this);
 
-        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.rankView,0,0);
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.rankView,defStyleAttr,0);
 
-        rank = typedArray.getInt(R.styleable.rankView_rank,5);
+        int rank = typedArray.getInt(R.styleable.rankView_rank,5);
         int color = typedArray.getColor(R.styleable.rankView_background,0);
         String title = typedArray.getString(R.styleable.rankView_title);
-        binding.textTitle.setText(context.getString(R.string.rank_view_title,title));
+        TextView textView = findViewById(R.id.text_title);
+        textView.setText(context.getString(R.string.rank_view_title,title));
         setBackgroundColor(color);
+        setRank(rank);
     }
 
-    public void setRankIcon(){
+    public void setRank(int rank){
         Log.d("setRankIcon","rank : "+ rank);
         int nowRank = rank;
-        if(rank > 5){
+        if(rank > 5 || rank < 0){
             nowRank = 5;
         }
         Log.d("setRankIcon","nowRank : "+nowRank);
+
         for(int i = 5 ; i > nowRank ; i-- ){
             Log.d("STEP","inForLoop");
-            ImageView ivRank = (ImageView) binding.layoutLinear.getChildAt(i);
+            ImageView ivRank = (ImageView) ((LinearLayout)(findViewById(R.id.layout_linear))).getChildAt(i);
             ivRank.setVisibility(View.INVISIBLE);
             Log.d("ivId",""+ivRank.getId());
         }
     }
 
-    public void setRank(int rank){
-        this.rank = rank;
-    }
+//    public void setRank(int rank){
+//        this.rank = rank;
+//    }
     }

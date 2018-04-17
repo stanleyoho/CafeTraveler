@@ -11,25 +11,29 @@
         <TextView
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
         <com.app.jlin.cafetraveler.CustomView.RankView
             android:id="@+id/rank_wifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="wifi"/>
+            app:title="wifi"
+            android:layout_gravity="right"/>
 
         <com.app.jlin.cafetraveler.CustomView.RankView
             android:id="@+id/rank_seat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="seat"/>
+            app:title="seat"
+            android:layout_gravity="right"/>
 
         <com.app.jlin.cafetraveler.CustomView.RankView
             android:id="@+id/rank_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="money"/>
+            app:title="money"
+            android:layout_gravity="right"/>
 
     </LinearLayout>
 </layout>
