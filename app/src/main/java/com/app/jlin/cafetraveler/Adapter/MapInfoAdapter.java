@@ -38,14 +38,10 @@ public class MapInfoAdapter implements GoogleMap.InfoWindowAdapter {
             MyMarkerTag myMarkerTag = (MyMarkerTag)marker.getTag();
             itemMarkerInfoBinding.textName.setText(myMarkerTag.getName());
             itemMarkerInfoBinding.rankWifi.setRank(myMarkerTag.getWifi());
-//            itemMarkerInfoBinding.rankWifi.setRankIcon();
             itemMarkerInfoBinding.rankSeat.setRank(myMarkerTag.getSeat());
-//            itemMarkerInfoBinding.rankSeat.setRankIcon();
             itemMarkerInfoBinding.rankMoney.setRank(myMarkerTag.getCheap());
-//            itemMarkerInfoBinding.rankMoney.setRankIcon();
             Log.d("myMarkerTag",myMarkerTag.getName()+myMarkerTag.getWifi()+myMarkerTag.getSeat()+myMarkerTag.getCheap());
         }
-//        itemMarkerInfoBinding.executePendingBindings();
         return itemMarkerInfoBinding.getRoot();
     }
 }

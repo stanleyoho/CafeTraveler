@@ -56,14 +56,10 @@ public class MapsActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    protected void onResume() {super.onResume();}
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+    protected void onDestroy() {super.onDestroy();}
 
     private void initRecyclerView() {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));

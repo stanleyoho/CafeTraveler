@@ -49,20 +49,11 @@ public class IntroActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         mProgressDialog = new ProgressDialog(IntroActivity.this);
-        handler = new Handler();
         progressHandler = new ProgressHandler(mProgressDialog);
+        handler = new Handler();
 
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setMessage("資料更新中：");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-
-        OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
-                .build();
-        okHttpClient.newCall(request).enqueue(callback);
-
+        initProgressDialog();
+        ApiGetCafeData();
     }
 
     @Override
@@ -75,6 +66,20 @@ public class IntroActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    private void initProgressDialog(){
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setMessage("資料更新中：");
+        mProgressDialog.setCancelable(false);
+    }
+
+    private void ApiGetCafeData(){
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
+                .build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+
     private Callback callback = new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -85,15 +90,20 @@ public class IntroActivity extends BaseActivity {
         @Override
         public void onResponse(Call call, Response response) throws IOException {
             String responseBody = response.body().string();
-
-            final JsonArray jsonElements = new Gson().fromJson(responseBody, JsonArray.class);
-            Log.e("jsonElements", String.valueOf(jsonElements.size()));
-            Log.e("RMCafe.getAll", String.valueOf(RMCafe.getAll().size()));
-
+            JsonArray jsonElements = new Gson().fromJson(responseBody, JsonArray.class);
             //資料數量不一樣在做處理
             if (jsonElements.size() != RMCafe.getAll().size()) {
-                progressHandler.setTotal(jsonElements.size());
                 RMCafe.deleteAll();
+
+                //show dialog
+                progressHandler.setTotal(jsonElements.size());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressDialog.show();
+                    }
+                });
+
                 ArrayList<RMCafe> rmCafeArrayList = new ArrayList<>();
                 for (int i = 0; i < jsonElements.size(); i++) {
                     RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
