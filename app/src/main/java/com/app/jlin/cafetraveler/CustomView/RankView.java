@@ -20,6 +20,7 @@ import com.app.jlin.cafetraveler.databinding.LayoutRankBinding;
 
 public class RankView extends LinearLayout {
     private LayoutRankBinding binding;
+    private int rank;
 
     public RankView(Context context) {
         this(context,null);
@@ -35,24 +36,30 @@ public class RankView extends LinearLayout {
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.rankView,0,0);
 
-        int rank = typedArray.getInt(R.styleable.rankView_rank,5);
+        rank = typedArray.getInt(R.styleable.rankView_rank,5);
         int color = typedArray.getColor(R.styleable.rankView_background,0);
         String title = typedArray.getString(R.styleable.rankView_title);
-        setRank(rank);
+//        setRankIcon(rank);
         binding.textTitle.setText(context.getString(R.string.rank_view_title,title));
         setBackgroundColor(color);
     }
 
-    public void setRank(int rank){
-        Log.d("setRank",""+ rank);
+    public void setRankIcon(){
+        Log.d("setRankIcon","rank : "+ rank);
         int nowRank = rank;
         if(rank > 5){
             nowRank = 5;
         }
-        for(int i = 4 ; i < nowRank -1 ; i-- ){
+        Log.d("setRankIcon","nowRank : "+nowRank);
+        for(int i = 5 ; i > nowRank ; i-- ){
+            Log.d("STEP","inForLoop");
             ImageView ivRank = (ImageView) binding.layoutLinear.getChildAt(i);
             ivRank.setVisibility(View.INVISIBLE);
+            Log.d("ivId",""+ivRank.getId());
         }
-        requestLayout();
     }
-}
+
+    public void setRank(int rank){
+        this.rank = rank;
+    }
+    }

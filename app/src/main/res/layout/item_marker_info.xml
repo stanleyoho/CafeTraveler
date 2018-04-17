@@ -17,19 +17,22 @@
             android:id="@+id/rank_wifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="wifi"/>
+            app:title="wifi"
+            app:ic_rank="@layout/layout_rank" />
 
         <com.app.jlin.cafetraveler.CustomView.RankView
             android:id="@+id/rank_seat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="seat"/>
+            app:title="seat"
+            app:ic_rank="@layout/layout_rank"/>
 
         <com.app.jlin.cafetraveler.CustomView.RankView
             android:id="@+id/rank_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:title="money"/>
+            app:title="money"
+            app:ic_rank="@layout/layout_rank"/>
 
     </LinearLayout>
 </layout>
