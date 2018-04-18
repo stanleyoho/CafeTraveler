@@ -1,7 +1,9 @@
 package com.app.jlin.cafetraveler.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,6 +14,7 @@ import com.app.jlin.cafetraveler.Manager.MrtDataManager;
 import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.SharePreferences.FilterCheckPreferences;
 import com.app.jlin.cafetraveler.Utils.CheckLineUtils;
 import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.Utils.Utils;
@@ -52,6 +55,7 @@ public class IntroActivity extends BaseActivity {
         progressHandler = new ProgressHandler(mProgressDialog);
         handler = new Handler();
 
+        cleanSharedPreferencesData(this);
         initProgressDialog();
         ApiGetCafeData();
     }
@@ -188,5 +192,10 @@ public class IntroActivity extends BaseActivity {
                 finish();
             }
         }, 1000);
+    }
+
+    private void cleanSharedPreferencesData(Context context) {
+        FilterCheckPreferences preferences = FilterCheckPreferences.getInstance(context);
+        preferences.clean();
     }
 }

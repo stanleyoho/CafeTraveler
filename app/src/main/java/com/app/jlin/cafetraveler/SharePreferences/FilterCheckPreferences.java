@@ -91,4 +91,9 @@ public class FilterCheckPreferences {
     public int getStation(){
         return this.checkedFilter.getInt(Constants.PREFERENCES_STATION_POSITION,0);
     }
+
+    public void clean(){
+        filterEditor.clear();
+        filterEditor.commit();
+    }
 }
