@@ -382,8 +382,28 @@ public class RMCafe extends RealmObject implements Serializable {
         query.and().greaterThanOrEqualTo("wifi", wifi);
         query.and().greaterThanOrEqualTo("seat", seat);
         query.and().greaterThanOrEqualTo("cheap",cheap);
-        query.and().equalTo("socket",socket);
-        query.and().equalTo("limited_time",timeLimit);
+        switch(socket){
+            case"no":
+                query.and().in("socket",new String[]{"no","maybe","yes"});
+                break;
+            case"maybe":
+                query.and().in("socket",new String[]{"maybe","yes"});
+                break;
+            case "yes":
+                query.and().equalTo("socket","yes");
+                break;
+        }
+        switch (timeLimit){
+            case"yes":
+                query.and().in("limited_time",new String[]{"yes","maybe","no"});
+                break;
+            case"maybe":
+                query.and().in("limited_time",new String[]{"maybe","no"});
+                break;
+            case"no":
+                query.and().equalTo("limited_time","no");
+                break;
+        }
         return query.findAll();
     }
 }

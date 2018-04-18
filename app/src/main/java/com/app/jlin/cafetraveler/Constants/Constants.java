@@ -36,9 +36,9 @@ public class Constants {
 
     /** Mrt Line */
     public static final int LINE_RED = 1;
-    public static final int LINE_BLUE = 2;
+    public static final int LINE_BROWN = 2;
     public static final int LINE_GREEN = 3;
     public static final int LINE_ORANGE = 4;
-    public static final int LINE_BROWN = 5;
+    public static final int LINE_BLUE = 5;
 }
 

@@ -31,7 +31,7 @@ public class FilterCheckPreferences {
 
     public void setWifi(int wifi){
         filterEditor.putInt(Constants.PREFERENCES_WIFI_LEVEL,wifi);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getWifi(){
@@ -40,7 +40,7 @@ public class FilterCheckPreferences {
 
     public void setSeat(int seat){
         filterEditor.putInt(Constants.PREFERENCES_SEAT_LEVEL,seat);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getSeat(){
@@ -49,7 +49,7 @@ public class FilterCheckPreferences {
 
     public void setCheap(int cheap){
         filterEditor.putInt(Constants.PREFERENCES_CHEAP_LEVEL,cheap);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getCheap(){
@@ -58,7 +58,7 @@ public class FilterCheckPreferences {
 
     public void setSocket(int socket){
         filterEditor.putInt(Constants.PREFERENCES_SOCKET_CHECK,socket);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getSocket(){
@@ -67,7 +67,7 @@ public class FilterCheckPreferences {
 
     public void setTimeLimit(int timeLimit){
         filterEditor.putInt(Constants.PREFERENCES_TIMELIMIT_CHECK,timeLimit);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getTimeLimit(){
@@ -76,7 +76,7 @@ public class FilterCheckPreferences {
 
     public void setLine(int line){
         filterEditor.putInt(Constants.PREFERENCES_LINE_ID,line);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getLine(){
@@ -85,7 +85,7 @@ public class FilterCheckPreferences {
 
     public void setStation(int station){
         filterEditor.putInt(Constants.PREFERENCES_STATION_POSITION,station);
-        filterEditor.apply();
+        filterEditor.commit();
     }
 
     public int getStation(){
