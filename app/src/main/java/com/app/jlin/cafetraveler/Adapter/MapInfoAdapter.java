@@ -40,7 +40,6 @@ public class MapInfoAdapter implements GoogleMap.InfoWindowAdapter {
             itemMarkerInfoBinding.rankWifi.setRank(myMarkerTag.getWifi());
             itemMarkerInfoBinding.rankSeat.setRank(myMarkerTag.getSeat());
             itemMarkerInfoBinding.rankMoney.setRank(myMarkerTag.getCheap());
-            Log.d("myMarkerTag",myMarkerTag.getName()+myMarkerTag.getWifi()+myMarkerTag.getSeat()+myMarkerTag.getCheap());
         }
         return itemMarkerInfoBinding.getRoot();
     }

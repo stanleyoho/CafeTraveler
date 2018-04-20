@@ -173,10 +173,8 @@ public class MapsActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
-            Log.d("requestCode", Integer.toString(requestCode));
             switch (resultCode) {
                 case RESULT_OK:
-                    Log.d("resultCode", Integer.toString(resultCode));
                     ArrayList<String> checkedListId = data.getExtras().getStringArrayList("checkedCafeList"); //TODO: solve NPE
                     List<RMCafe> checkedList = new ArrayList<>();
                     if (checkedListId != null) {
@@ -186,11 +184,9 @@ public class MapsActivity extends FragmentActivity {
                         }
                         updateRecyclerView(checkedList, mMap, true);
                     } else {
-                        Log.d("nonCheckedListId", "failed to get checkedListId");
                     }
                     break;
                 case RESULT_CANCELED:
-                    Log.d("resultCode", Integer.toString(resultCode));
                     RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
                     updateRecyclerView(getCafeList, mMap, false);
                     break;

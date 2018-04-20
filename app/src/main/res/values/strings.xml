@@ -18,7 +18,7 @@
     <string name="if_wifi">是否有wifi？</string>
     <string name="if_seat">座位數量</string>
     <string name="if_limit">是否限制用餐時間？</string>
-    <string name="if_socket">是否有插座？</string>
+    <string name="if_socket">是否需要插座？</string>
     <string name="if_cheap">消費金額</string>
 
     <string name="level_1">1\u2605</string>
