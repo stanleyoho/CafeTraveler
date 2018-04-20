@@ -14,9 +14,9 @@ package com.app.jlin.cafetraveler.Utils;
  */
 
 public class CheckLineUtils {
-    private static boolean isRedLine, isGreenLine, isBlueLine, isOrangeLine, isBrownLine;
+    private boolean isRedLine, isGreenLine, isBlueLine, isOrangeLine, isBrownLine;
 
-    public static void whichLine(String mrtLineId) {
+    public void whichLine(String mrtLineId) {
         if (mrtLineId.equals("BR")) isBrownLine = true;
         if (mrtLineId.equals("G")) isGreenLine = true;
         if (mrtLineId.equals("BL")) isBlueLine = true;
@@ -24,27 +24,27 @@ public class CheckLineUtils {
         if (mrtLineId.equals("O")) isOrangeLine = true;
     }
 
-    public static boolean isRedLine() {
+    public  boolean isRedLine() {
         return isRedLine;
     }
 
-    public static boolean isGreenLine() {
+    public  boolean isGreenLine() {
         return isGreenLine;
     }
 
-    public static boolean isBlueLine() {
+    public  boolean isBlueLine() {
         return isBlueLine;
     }
 
-    public static boolean isOrangeLine() {
+    public  boolean isOrangeLine() {
         return isOrangeLine;
     }
 
-    public static boolean isBrownLine() {
+    public  boolean isBrownLine() {
         return isBrownLine;
     }
 
-    public static void setLineFalse() {
+    public  void  setLineFalse() {
         isRedLine = false;
         isBlueLine = false;
         isGreenLine = false;

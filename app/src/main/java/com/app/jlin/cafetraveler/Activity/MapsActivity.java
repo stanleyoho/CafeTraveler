@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,16 +22,22 @@ import android.widget.Toast;
 
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
 import com.app.jlin.cafetraveler.Adapter.MapInfoAdapter;
+import com.app.jlin.cafetraveler.Builder.PermissionBuilder;
+import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
+import com.app.jlin.cafetraveler.Utils.LogUtils;
+import com.app.jlin.cafetraveler.Utils.MapUtils;
+import com.app.jlin.cafetraveler.Utils.Utils;
 import com.app.jlin.cafetraveler.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -43,6 +52,7 @@ public class MapsActivity extends FragmentActivity {
     private final int REQUEST_CODE = 0;
     private ActivityMapsBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,39 +65,57 @@ public class MapsActivity extends FragmentActivity {
         mapFragment.getMapAsync(onMapReadyCallback);
     }
 
+
     @Override
     protected void onResume() {super.onResume();}
 
     @Override
     protected void onDestroy() {super.onDestroy();}
 
+
+
     private void initRecyclerView() {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void updateRecyclerView(List<RMCafe> cafeList, GoogleMap map, Boolean isChecked) {
+
+    /**
+     * @param cafeList dataList of coffee shop
+     * @param map googleMap
+     * @param isFilterData isFilterData by CheckListActivity
+     * */
+    private void updateRecyclerView(List<RMCafe> cafeList, GoogleMap map, Boolean isFilterData) {
         CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
         if (cafeAdapter == null) {
             cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack);
             binding.recycler.setAdapter(cafeAdapter);
         } else {
-            cafeAdapter.updateData(this, cafeList, map, isChecked);
+            cafeAdapter.updateData(this, cafeList, map, isFilterData);
         }
     }
+
+
 
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
 
+            //init zoomPreference
             mMap.setMaxZoomPreference(16f);
             mMap.setMinZoomPreference(3f);
 
-            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //check location permission
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(MapsActivity.this, "Please open location function", Toast.LENGTH_SHORT).show();
             } else {
                 mMap.setMyLocationEnabled(true);
+                mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+                    @Override
+                    public void onMyLocationClick(@NonNull Location location) {
+                        mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(),location.getLongitude(),18));
+                    }
+                });
             }
 
             /**
@@ -95,51 +123,58 @@ public class MapsActivity extends FragmentActivity {
              * 並於google map開啟時顯示當前位置
              */
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            LocationListener locationListener = new LocationListener() {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new LocationListener(){
+
                 @Override
                 public void onLocationChanged(Location location) {
+                    LogUtils.e("onLocationChanged","onLocationChanged");
+                    Toast.makeText(MapsActivity.this,"onLocationChanged",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    LogUtils.e("onStatusChanged","onStatusChanged");
+                    Toast.makeText(MapsActivity.this,"onStatusChanged",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onProviderEnabled(String s) {
+                public void onProviderEnabled(String provider) {
+                    LogUtils.e("onProviderEnabled","onProviderEnabled");
+                    Toast.makeText(MapsActivity.this,"onProviderEnabled",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onProviderDisabled(String s) {
-                }
-            };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
-            }
-
-            RealmResults<RMCafe> getCafeList = RealmManager.getInstance().getRealm().where(RMCafe.class).findAll();
-
-//            將此方法移至CafeListCallBack，使地圖上標記有點選咖啡店才顯示
-//            for(RMCafe cafe:allCafeList){
-//                LatLng cafeLat = new LatLng(cafe.getLatitude(),cafe.getLongitude());
-//                MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(cafe.getName());
-//                mMap.addMarker(markerOptions);
-//                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(cafe.getLatitude(),cafe.getLongitude())));
-//            }
-
-            //recyclerView setAdapter
-            updateRecyclerView(getCafeList, mMap, false);
-
-            mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
-                @Override
-                public void onMyLocationClick(@NonNull Location location) {
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18);
-                    mMap.animateCamera(cameraUpdate);
+                public void onProviderDisabled(String provider) {
+                    LogUtils.e("onProviderDisabled","onProviderDisabled");
+                    Toast.makeText(MapsActivity.this,"onProviderDisabled",Toast.LENGTH_SHORT).show();
                 }
             });
 
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            CameraUpdate cameraUpdate = null;
+            if (location != null) {
+                mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(),location.getLongitude(),12));
+            }else{
+                mMap.animateCamera(MapUtils.getCameraLatLngZoom(Constants.LOCATION_TAIPIE_STATION_LAT,Constants.LOCATION_TAIPIE_STATION_LNG,12));
+            }
+            //recyclerView setAdapter
+            updateRecyclerView(RealmManager.getInstance().getRealm().where(RMCafe.class).findAll(), mMap, false);
+
             mMap.setInfoWindowAdapter(new MapInfoAdapter(MapsActivity.this));
+
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    //點擊圖案變形
+                    if(marker != null){
+                        BitmapDrawable bitmapDrawable = (BitmapDrawable) MapsActivity.this.getResources().getDrawable(R.drawable.ic_mymarker);
+                        Bitmap bitmap = Bitmap.createScaledBitmap(bitmapDrawable.getBitmap(),200,200,false);
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    }
+                    return false;
+                }
+            });
+
         }
     };
 
@@ -159,8 +194,7 @@ public class MapsActivity extends FragmentActivity {
 //            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,120,240,false);
 //            MarkerOptions markerOptions = new MarkerOptions().position(cafeLat).title(rmCafe.getName()).icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
 //            marker = mMap.addMarker(markerOptions);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude()), 18);
-            mMap.animateCamera(cameraUpdate);
+            mMap.animateCamera(MapUtils.getCameraLatLngZoom(rmCafe.getLatitude(),rmCafe.getLongitude(),18));
         }
     };
 
@@ -193,5 +227,6 @@ public class MapsActivity extends FragmentActivity {
             }
         }
     }
+
 }
 

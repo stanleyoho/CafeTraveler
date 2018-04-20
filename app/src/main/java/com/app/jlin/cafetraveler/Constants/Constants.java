@@ -40,5 +40,9 @@ public class Constants {
     public static final int LINE_GREEN = 3;
     public static final int LINE_ORANGE = 4;
     public static final int LINE_BLUE = 5;
+
+    /** Location */
+    public static final double LOCATION_TAIPIE_STATION_LAT = 25.048734;
+    public static final double LOCATION_TAIPIE_STATION_LNG = 121.514231;
 }
 

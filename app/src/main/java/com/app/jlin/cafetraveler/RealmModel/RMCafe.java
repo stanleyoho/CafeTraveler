@@ -2,6 +2,8 @@ package com.app.jlin.cafetraveler.RealmModel;
 
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
+import com.app.jlin.cafetraveler.Tag.MyMarkerTag;
+import com.app.jlin.cafetraveler.Utils.CheckLineUtils;
 import com.app.jlin.cafetraveler.Utils.Utils;
 
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class RMCafe extends RealmObject implements Serializable {
     @PrimaryKey
     private String id;
 
+    //about coffee shop variable
     private String name;
     private String city;
     private int wifi;
@@ -40,8 +43,9 @@ public class RMCafe extends RealmObject implements Serializable {
     private String mrt;
     private String open_time;
 
-    private String myMrt;
-    private String mrtLine;
+    //about mrt variable
+    private String nearestStationName;
+    private String nearestAnnotation;
     private boolean isRedLine;
     private boolean isGreenLine;
     private boolean isBlueLine;
@@ -192,66 +196,66 @@ public class RMCafe extends RealmObject implements Serializable {
         this.open_time = open_time;
     }
 
-    public String getMyMrt() {
-        return myMrt;
+    public String getNearestStationName() {
+        return nearestStationName;
     }
 
-    public void setMyMrt(String myMrt) {
-        this.myMrt = myMrt;
+    public void setNearestStationName(String nearestStationName) {
+        this.nearestStationName = nearestStationName;
     }
 
-    public boolean isRedLine() {
+    private boolean isRedLine() {
         return isRedLine;
     }
 
-    public void setRedLine(boolean redLine) {
+    private void setRedLine(boolean redLine) {
         isRedLine = redLine;
     }
 
-    public boolean isGreenLine() {
+    private boolean isGreenLine() {
         return isGreenLine;
     }
 
-    public void setGreenLine(boolean greenLine) {
+    private void setGreenLine(boolean greenLine) {
         isGreenLine = greenLine;
     }
 
-    public boolean isBlueLine() {
+    private boolean isBlueLine() {
         return isBlueLine;
     }
 
-    public void setBlueLine(boolean blueLine) {
+    private void setBlueLine(boolean blueLine) {
         isBlueLine = blueLine;
     }
 
-    public boolean isOrangeLine() {
+    private boolean isOrangeLine() {
         return isOrangeLine;
     }
 
-    public void setOrangeLine(boolean orangeLine) {
+    private void setOrangeLine(boolean orangeLine) {
         isOrangeLine = orangeLine;
     }
 
-    public boolean isBrownLine() {
+    private boolean isBrownLine() {
         return isBrownLine;
     }
 
-    public void setBrownLine(boolean brownLine) {
+    private void setBrownLine(boolean brownLine) {
         isBrownLine = brownLine;
     }
 
-    public String getMrtLine() {
-        return mrtLine;
+    public String getNearestAnnotation() {
+        return nearestAnnotation;
     }
 
-    public void setMrtLine() {
+    public void setMrtAnnotation() {
         StringBuffer sb = new StringBuffer();
         sb.append(isRedLine() ? "紅 " : "")
                 .append(isBlueLine() ? "藍 " : "")
                 .append(isGreenLine() ? "綠 " : "")
                 .append(isBrownLine() ? "咖啡 " : "")
                 .append(isOrangeLine() ? "橘 " : "");
-        mrtLine = sb.toString();
+        nearestAnnotation = sb.toString();
     }
 
     /**
@@ -341,7 +345,7 @@ public class RMCafe extends RealmObject implements Serializable {
                 break;
         }
         if (stationName != null) {
-            query.and().equalTo("myMrt", stationName);
+            query.and().equalTo("nearestStationName", stationName);
         }
         return query.findAll();
     }
@@ -377,7 +381,7 @@ public class RMCafe extends RealmObject implements Serializable {
                 break;
         }
         if (stationName != null) {
-            query.and().equalTo("myMrt", stationName);
+            query.and().equalTo("nearestStationName", stationName);
         }
         query.and().greaterThanOrEqualTo("wifi", wifi);
         query.and().greaterThanOrEqualTo("seat", seat);
@@ -405,5 +409,22 @@ public class RMCafe extends RealmObject implements Serializable {
                 break;
         }
         return query.findAll();
+    }
+
+    public static MyMarkerTag getMyMarkerTag(RMCafe rmCafe){
+        MyMarkerTag markerTag = new MyMarkerTag();
+        markerTag.setName(rmCafe.getName());
+        markerTag.setWifi(rmCafe.getWifi());
+        markerTag.setCheap(rmCafe.getCheap());
+        markerTag.setSeat(rmCafe.getSeat());
+        return markerTag;
+    }
+
+    public void setMrtLineType(CheckLineUtils checkLineUtils){
+        setRedLine(checkLineUtils.isRedLine());
+        setBlueLine(checkLineUtils.isBlueLine());
+        setGreenLine(checkLineUtils.isGreenLine());
+        setBrownLine(checkLineUtils.isBrownLine());
+        setOrangeLine(checkLineUtils.isOrangeLine());
     }
 }
