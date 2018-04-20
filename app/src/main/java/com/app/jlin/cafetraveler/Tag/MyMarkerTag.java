@@ -5,7 +5,7 @@ package com.app.jlin.cafetraveler.Tag;
  */
 
 public class MyMarkerTag {
-    private String name;
+    private String name,icon;
     private int wifi,seat,cheap;
 
     public String getName() {
@@ -38,5 +38,13 @@ public class MyMarkerTag {
 
     public void setCheap(int cheap) {
         this.cheap = cheap;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

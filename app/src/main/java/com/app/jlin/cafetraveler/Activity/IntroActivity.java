@@ -114,7 +114,6 @@ public class IntroActivity extends BaseActivity {
                     double finalDistance = 0;
                     String finalMrt = "";
                     String finalMrtId;
-                    CheckLineUtils checkLineUtils = new CheckLineUtils();
                     List<MrtModel> mrtModelList = MrtDataManager.getInstance().getMrtInfoList();
                     for (MrtModel mrtModel : mrtModelList) {
                         //判斷離哪個捷運站最近
@@ -124,20 +123,20 @@ public class IntroActivity extends BaseActivity {
                         }
                         if (tempDistance <= finalDistance) {
                             if (tempDistance < finalDistance) {
-                            checkLineUtils.setLineFalse();
+                            CheckLineUtils.setLineFalse();
                         }
                             finalDistance = tempDistance;
                             finalMrt = mrtModel.getStation_name_chinese();
                             finalMrtId = mrtModel.getStation_line_id();
-                            checkLineUtils.whichLine(finalMrtId);
+                            CheckLineUtils.whichLine(finalMrtId);
                         }
                     }
                     rmCafe.setMyMrt(finalMrt);
-                    rmCafe.setRedLine(checkLineUtils.isRedLine());
-                    rmCafe.setBlueLine(checkLineUtils.isBlueLine());
-                    rmCafe.setGreenLine(checkLineUtils.isGreenLine());
-                    rmCafe.setBrownLine(checkLineUtils.isBrownLine());
-                    rmCafe.setOrangeLine(checkLineUtils.isOrangeLine());
+                    rmCafe.setRedLine(CheckLineUtils.isRedLine());
+                    rmCafe.setBlueLine(CheckLineUtils.isBlueLine());
+                    rmCafe.setGreenLine(CheckLineUtils.isGreenLine());
+                    rmCafe.setBrownLine(CheckLineUtils.isBrownLine());
+                    rmCafe.setOrangeLine(CheckLineUtils.isOrangeLine());
                     rmCafe.setMrtLine();
                     rmCafeArrayList.add(rmCafe);
                     progressHandler.setProgress(i + 1);
