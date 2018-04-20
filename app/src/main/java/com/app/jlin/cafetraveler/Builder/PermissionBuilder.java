@@ -98,7 +98,7 @@ public class PermissionBuilder {
             return this;
         }
 
-        /** 確認MIC權限 */
+        /** 確認Location權限 */
         public Builder checkLocationState(){
 
             // 判斷是否沒有 read phone state (讀取電話狀態) 權限

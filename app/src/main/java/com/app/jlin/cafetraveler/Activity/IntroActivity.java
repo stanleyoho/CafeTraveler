@@ -3,7 +3,6 @@ package com.app.jlin.cafetraveler.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,15 +20,9 @@ import com.app.jlin.cafetraveler.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -100,7 +93,7 @@ public class IntroActivity extends BaseActivity {
                 RMCafe.deleteAll();
 
                 //show dialog
-                progressHandler.setTotal(jsonElements.size());
+                mProgressDialog.setMax(jsonElements.size());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -111,42 +104,43 @@ public class IntroActivity extends BaseActivity {
                 ArrayList<RMCafe> rmCafeArrayList = new ArrayList<>();
                 for (int i = 0; i < jsonElements.size(); i++) {
                     RMCafe rmCafe = new Gson().fromJson(jsonElements.get(i), RMCafe.class);
-                    double finalDistance = 0;
-                    String finalMrt = "";
-                    String finalMrtId;
+                    double nearestDistance = 0;
+                    String finalMrtStation = "";
+                    String finalMrtType;
+                    CheckLineUtils checkLineUtils = new CheckLineUtils();
                     List<MrtModel> mrtModelList = MrtDataManager.getInstance().getMrtInfoList();
                     for (MrtModel mrtModel : mrtModelList) {
                         //判斷離哪個捷運站最近
                         double tempDistance = Utils.GetDistance(rmCafe.getLatitude(), rmCafe.getLongitude(), mrtModel.getLatitude(), mrtModel.getLongitude());
-                        if (finalDistance == 0) {
-                            finalDistance = tempDistance;
+                        //記錄第一筆資料的距離
+                        if (nearestDistance == 0) {
+                            nearestDistance = tempDistance;
                         }
-                        if (tempDistance <= finalDistance) {
-                            if (tempDistance < finalDistance) {
-                            CheckLineUtils.setLineFalse();
-                        }
-                            finalDistance = tempDistance;
-                            finalMrt = mrtModel.getStation_name_chinese();
-                            finalMrtId = mrtModel.getStation_line_id();
-                            CheckLineUtils.whichLine(finalMrtId);
+                        //比對資料 有更近的距離就替換掉(因為有四站重複不同線,會造成有機會距離相同)
+                        if (tempDistance <= nearestDistance) {
+                            //有更近距離出現 set All Line "false"
+                            if (tempDistance < nearestDistance) {
+                                checkLineUtils.setLineFalse();
+                            }
+                            nearestDistance = tempDistance;
+                            finalMrtStation = mrtModel.getStation_name_chinese();
+                            finalMrtType = mrtModel.getStation_line_id();
+                            checkLineUtils.whichLine(finalMrtType);
                         }
                     }
-                    rmCafe.setMyMrt(finalMrt);
-                    rmCafe.setRedLine(CheckLineUtils.isRedLine());
-                    rmCafe.setBlueLine(CheckLineUtils.isBlueLine());
-                    rmCafe.setGreenLine(CheckLineUtils.isGreenLine());
-                    rmCafe.setBrownLine(CheckLineUtils.isBrownLine());
-                    rmCafe.setOrangeLine(CheckLineUtils.isOrangeLine());
-                    rmCafe.setMrtLine();
+                    //設定最近捷運站名稱
+                    rmCafe.setNearestStationName(finalMrtStation);
+                    //設定 lineType true/false
+                    rmCafe.setMrtLineType(checkLineUtils);
+                    rmCafe.setMrtAnnotation();
                     rmCafeArrayList.add(rmCafe);
-                    progressHandler.setProgress(i + 1);
-                    progressHandler.sendEmptyMessage(0);
+                    progressHandler.updateDialog(i + 1);
                     LogUtils.e("for", String.valueOf(rmCafeArrayList.size()));
                 }
                 RMCafe.addAll(rmCafeArrayList);
             }
 
-            progressHandler.disDialog();
+            mProgressDialog.dismiss();
 
             postToNextActivity();
         }
@@ -154,28 +148,13 @@ public class IntroActivity extends BaseActivity {
 
     private class ProgressHandler extends Handler {
         private ProgressDialog mProgressDialog;
-        private int progress, total;
 
         public ProgressHandler(ProgressDialog mProgressDialog) {
             this.mProgressDialog = mProgressDialog;
         }
 
-        public void setTotal(int total) {
-            this.total = total;
-            mProgressDialog.setMax(this.total);
-        }
-
-        public void setProgress(int progress) {
-            this.progress = progress;
-            updateDialog();
-        }
-
-        public void disDialog() {
-            mProgressDialog.dismiss();
-        }
-
-        private void updateDialog() {
-            if (progress == total) {
+        private void updateDialog(int progress) {
+            if (progress == mProgressDialog.getMax()) {
                 mProgressDialog.dismiss();
             } else {
                 mProgressDialog.setProgress(progress);

@@ -20,7 +20,6 @@ import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerEmptyBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -60,12 +59,19 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             CafeVH cafeVH = (CafeVH) holder;
             final RMCafe rmCafe = cafeList.get(position);
             CafeViewModel cafeViewModel = new CafeViewModel();
+<<<<<<< HEAD
             cafeViewModel.setName(context.getString(R.string.cafe_name, rmCafe.getName()));
 //            cafeViewModel.setLat(context.getString(R.string.cafe_lat,rmCafe.getLatitude()));
 //            cafeViewModel.setLon(context.getString(R.string.cafe_lon,rmCafe.getLongitude()));
             cafeViewModel.setMrt(context.getString(R.string.cafe_mrt, rmCafe.getMyMrt()));
             cafeViewModel.setLine(context.getString(R.string.cafe_line, rmCafe.getMrtLine()));
             cafeViewModel.setOpenTime(context.getString(R.string.cafe_open_time, rmCafe.getOpen_time()));
+=======
+            cafeViewModel.setName(context.getString(R.string.cafe_name,rmCafe.getName()));
+            cafeViewModel.setMrt(context.getString(R.string.cafe_mrt,rmCafe.getNearestStationName()));
+            cafeViewModel.setLine(context.getString(R.string.cafe_line,rmCafe.getNearestAnnotation()));
+            cafeViewModel.setOpenTime(context.getString(R.string.cafe_open_time,rmCafe.getOpen_time()));
+>>>>>>> 94d444cbdb15f8f840c47686565603be21bd6500
             cafeVH.binding.setViewModel(cafeViewModel);
             if (cafeListCallBack != null) {
                 cafeVH.binding.layout.setOnClickListener(new View.OnClickListener() {
@@ -109,13 +115,46 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void updateData(Context context, List<RMCafe> cafeList, GoogleMap map, Boolean isChecked) {
         this.cafeList = cafeList;
+<<<<<<< HEAD
         map.clear();
         if (isChecked) {
             for (RMCafe rmCafe : cafeList) {
                 Bitmap icon = MyMarkerUtils.smallIcon(context);
                 MyMarkerUtils.addMarker(map,rmCafe,icon);
+=======
+        if(!markerOps.isEmpty()){
+            map.clear();
+            markerOps.clear();
+        }
+
+        if(isChecked){
+            for(RMCafe rmCafe : cafeList){
+                MarkerOptions markerOption = addMarkerOption(context,rmCafe,map);
+                MyMarkerTag myMarkerTag = RMCafe.getMyMarkerTag(rmCafe);
+                map.addMarker(markerOption).setTag(myMarkerTag);
+>>>>>>> 94d444cbdb15f8f840c47686565603be21bd6500
             }
         }
         notifyDataSetChanged();
     }
+<<<<<<< HEAD
+=======
+
+    private MarkerOptions addMarkerOption(Context context, RMCafe rmCafe, GoogleMap map) {
+
+            LatLng place = new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude());
+            String title = rmCafe.getName();
+            BitmapDrawable icon = (BitmapDrawable)context.getResources().getDrawable(R.drawable.ic_mymarker);
+            Bitmap bitmap = icon.getBitmap();
+            Bitmap smallIcon = Bitmap.createScaledBitmap(bitmap,80,160,false);
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(place)
+                    .title(title)
+                    .icon(BitmapDescriptorFactory.fromBitmap(smallIcon));
+
+            markerOps.add(markerOptions);
+            return markerOptions;
+    }
+>>>>>>> 94d444cbdb15f8f840c47686565603be21bd6500
 }

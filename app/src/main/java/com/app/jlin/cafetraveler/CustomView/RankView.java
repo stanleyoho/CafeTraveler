@@ -20,7 +20,7 @@ import com.app.jlin.cafetraveler.databinding.LayoutRankBinding;
  */
 
 public class RankView extends LinearLayout {
-//    private int rank;
+
 
     public RankView(Context context) {
         this(context, null);
