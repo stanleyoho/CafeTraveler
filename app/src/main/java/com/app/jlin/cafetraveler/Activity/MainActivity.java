@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     private class BtnEvent implements View.OnClickListener{
         @Override
         public void onClick(View view) {

@@ -146,10 +146,10 @@ public class IntroActivity extends BaseActivity {
         }
     };
 
-    private class ProgressHandler extends Handler {
+    private static class ProgressHandler extends Handler {
         private ProgressDialog mProgressDialog;
 
-        public ProgressHandler(ProgressDialog mProgressDialog) {
+        private ProgressHandler(ProgressDialog mProgressDialog) {
             this.mProgressDialog = mProgressDialog;
         }
 

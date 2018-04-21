@@ -149,12 +149,11 @@ public class MapsActivity extends FragmentActivity {
                 @Override
                 public void onProviderDisabled(String provider) {
                     LogUtils.e("onProviderDisabled","onProviderDisabled");
-                    Toast.makeText(MapsActivity.this,"onProviderDisabled",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this,"請打開GPS，以獲得更好的服務",Toast.LENGTH_SHORT).show();
                 }
             });
 
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            CameraUpdate cameraUpdate = null;
             if (location != null) {
                 mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(),location.getLongitude(),12));
             }else{
@@ -168,12 +167,13 @@ public class MapsActivity extends FragmentActivity {
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
-                    //點擊圖案變形
-                    if(marker != null){
-                        BitmapDrawable bitmapDrawable = (BitmapDrawable) MapsActivity.this.getResources().getDrawable(R.drawable.ic_mymarker);
-                        Bitmap bitmap = Bitmap.createScaledBitmap(bitmapDrawable.getBitmap(),200,200,false);
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                    }
+//                    //點擊圖案變形
+//                    //TODO : 點其他復原
+//                    if(marker != null){
+//                        BitmapDrawable bitmapDrawable = (BitmapDrawable) MapsActivity.this.getResources().getDrawable(R.drawable.ic_mymarker);
+//                        Bitmap bitmap = Bitmap.createScaledBitmap(bitmapDrawable.getBitmap(),200,200,false);
+//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+//                    }
                     return false;
                 }
             });
@@ -202,7 +202,7 @@ public class MapsActivity extends FragmentActivity {
         if (requestCode == REQUEST_CODE) {
             switch (resultCode) {
                 case RESULT_OK:
-                    ArrayList<String> checkedListId = data.getExtras().getStringArrayList("checkedCafeList"); //TODO: solve NPE
+                    ArrayList<String> checkedListId = data.getExtras().getStringArrayList("checkedCafeList");
                     List<RMCafe> checkedList = new ArrayList<>();
                     if (checkedListId != null) {
                         for (String cafeId : checkedListId) {

@@ -70,37 +70,40 @@ public class MyMarkerUtils {
     private static Marker preMarker = null;
     private static Marker nowMarker = null;
 
-    public static void cleanPreMarker(){
+    public static void cleanMarkers() {
+        markerList.clear();
         preMarker = null;
     }
 
-    public static void checkMarker(Context context,GoogleMap map, List<RMCafe> cafeList,RMCafe rmCafe) {
+    public static void checkMarker(Context context, GoogleMap map, List<RMCafe> cafeList, RMCafe rmCafe) {
         String title = rmCafe.getName();
-        if(preMarker == null){
-            Log.d("STEP","inIfStmt");
-            int position = -1;
-            Marker marker = null;
-            for(int i = 0;i<markerList.size();i++){
-                Log.d("STEP","inForLoop");
-                marker = markerList.get(i);
-                if(marker.getTitle().equals(title)){
-                    position = i;
-                    Log.d("preMarkerIsNull",marker.getTitle());
-                    break;
-                }
-            }
-            if(position != -1){
-                marker.remove();
-//                markerList.get(position).remove();
-            }
-        }else{
-            preMarker.remove();
+        Log.d("checkMarker", "STEP : inIfStmt");
+        if (preMarker != null) {
+            preMarker.setIcon(BitmapDescriptorFactory.fromBitmap(smallIcon(context)));
         }
+        int position = -1;
+        Marker marker = null;
+        for (int i = 0; i < markerList.size(); i++) {
+            Log.d("checkMarker", "STEP : inForLoop");
+            marker = markerList.get(i);
+            if (marker.getTitle().equals(title)) {
+                position = i;
+                Log.d("preMarkerIsNull", marker.getTitle());
+                break;
+            }
+        }
+        if (position != -1) {
+            preMarker = marker;
+            marker.remove();
+            markerList.remove(position);
+        }
+
         Bitmap nowIcon = largeIcon(context);
-        nowMarker = addMarker(map,rmCafe,nowIcon);
-        Log.d("getMarker","preMarker = "+((preMarker == null)?"null":preMarker.getTitle())+"\tnowMarker = "+nowMarker.getTitle());
+        nowMarker = addMarker(map, rmCafe, nowIcon);
+        Log.d("getMarker", "preMarker = " + ((preMarker == null) ? "null" : preMarker.getTitle()) + "\tnowMarker = " + nowMarker.getTitle());
         preMarker = nowMarker;
-        Log.d("getMarker","preMarker = "+preMarker.getTitle()+"\tnowMarker = "+nowMarker.getTitle());
+        Log.d("getMarker", "preMarker = " + preMarker.getTitle() + "\tnowMarker = " + nowMarker.getTitle());
+        Log.d("MarkerListSize", "MarkerListSize = " + markerList.size());
     }
 
     public static void setTag(Marker marker, RMCafe rmCafe, int iconSize) {
