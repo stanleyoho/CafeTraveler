@@ -71,6 +71,7 @@ public class IntroActivity extends BaseActivity {
 
     private void ApiGetCafeData(){
         OkHttpClient okHttpClient = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(UrlConstants.HTTP + UrlConstants.TAIPEI_CAFE)
                 .build();
@@ -89,6 +90,8 @@ public class IntroActivity extends BaseActivity {
             String responseBody = response.body().string();
             JsonArray jsonElements = new Gson().fromJson(responseBody, JsonArray.class);
             //資料數量不一樣在做處理
+            LogUtils.e("response",String.valueOf(jsonElements.size()));
+            LogUtils.e("Local",String.valueOf(RMCafe.getAll().size()));
             if (jsonElements.size() != RMCafe.getAll().size()) {
                 RMCafe.deleteAll();
 
@@ -139,9 +142,6 @@ public class IntroActivity extends BaseActivity {
                 }
                 RMCafe.addAll(rmCafeArrayList);
             }
-
-            mProgressDialog.dismiss();
-
             postToNextActivity();
         }
     };

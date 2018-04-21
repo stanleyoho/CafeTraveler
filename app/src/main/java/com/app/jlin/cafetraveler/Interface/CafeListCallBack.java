@@ -8,4 +8,7 @@ import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 
 public interface CafeListCallBack {
     void moveToPosition(RMCafe rmCafe);
+    void moveToTop();
+    void moveToBottom();
+
 }

@@ -13,4 +13,8 @@ public class MapUtils {
     public static CameraUpdate getCameraLatLngZoom(double latitude ,double longitude ,int zoom){
         return CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),zoom);
     }
+
+    public static CameraUpdate getCameraScrollBy(float x , float y){
+        return CameraUpdateFactory.scrollBy(x,y);
+    }
 }

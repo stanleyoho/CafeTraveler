@@ -13,8 +13,10 @@ import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.Utils.MyMarkerUtils;
 import com.app.jlin.cafetraveler.ViewModel.CafeViewModel;
+import com.app.jlin.cafetraveler.databinding.ItemCafeInfoBottomBinding;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerBinding;
 import com.app.jlin.cafetraveler.databinding.ItemCafeInfoRecyclerEmptyBinding;
+import com.app.jlin.cafetraveler.databinding.ItemCafeInfoSummaryBinding;
 import com.google.android.gms.maps.GoogleMap;
 
 import java.util.List;
@@ -30,6 +32,12 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private CafeListCallBack cafeListCallBack;
     private GoogleMap map;
 
+    private enum myEnum{
+        TYPE_SUMMARY,
+        TYPE_BOTTOM,
+        TYPE_DATA,
+        TYPE_EMPTY
+    }
     public CafeAdapter(Context context, List<RMCafe> cafeList, CafeListCallBack cafeListCallBack,GoogleMap map) {
         this.context = context;
         this.cafeList = cafeList;
@@ -39,18 +47,29 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (cafeList == null || cafeList.size() == 0) {
+
+        if (viewType == myEnum.TYPE_EMPTY.ordinal()) {
             return new EmptyVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_recycler_empty, parent, false));
-        } else {
+        }else if( viewType == myEnum.TYPE_SUMMARY.ordinal()){
+            return new SummaryVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_summary,parent,false));
+        } else if( viewType == myEnum.TYPE_DATA.ordinal()){
             return new CafeVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_recycler, parent, false));
+        }else if(viewType == myEnum.TYPE_BOTTOM.ordinal()){
+            return new BottomVH(LayoutInflater.from(context).inflate(R.layout.item_cafe_info_bottom, parent, false));
+        }else{
+            return null;
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof CafeVH) {
+
+        if (holder instanceof SummaryVH){
+            SummaryVH summaryVH = (SummaryVH)holder;
+            summaryVH.binding.textSummary.setText(context.getString(R.string.recycler_summary,String.valueOf(cafeList.size())));
+        }else if (holder instanceof CafeVH) {
             CafeVH cafeVH = (CafeVH) holder;
-            final RMCafe rmCafe = cafeList.get(position);
+            final RMCafe rmCafe = cafeList.get(position -1);
             CafeViewModel cafeViewModel = new CafeViewModel();
             cafeViewModel.setName(context.getString(R.string.cafe_name,rmCafe.getName()));
             cafeViewModel.setMrt(context.getString(R.string.cafe_mrt,rmCafe.getNearestStationName()));
@@ -68,13 +87,30 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         } else if (holder instanceof EmptyVH) {
 
+        } else if (holder instanceof BottomVH){
+
         }
         holder.setIsRecyclable(false);
     }
 
+
+
     @Override
     public int getItemCount() {
-        return cafeList.size() <= 1 ? 1 : cafeList.size();
+        return cafeList.size() <= 1 ? 1 : cafeList.size() + 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0){
+            return myEnum.TYPE_SUMMARY.ordinal();
+        }else if(position == getItemCount() -1){
+            return myEnum.TYPE_BOTTOM.ordinal();
+        }else if( cafeList.size() <= 0 || getItemCount() == 1){
+            return myEnum.TYPE_EMPTY.ordinal();
+        }else {
+            return myEnum.TYPE_DATA.ordinal();
+        }
     }
 
     private class CafeVH extends RecyclerView.ViewHolder {
@@ -94,6 +130,36 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public EmptyVH(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
+        }
+    }
+
+    private class BottomVH extends RecyclerView.ViewHolder{
+        private ItemCafeInfoBottomBinding binding;
+        public BottomVH(View itemView) {
+            super(itemView);
+            binding = DataBindingUtil.bind(itemView);
+            binding.textBottom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cafeListCallBack.moveToTop();
+                }
+            });
+        }
+    }
+
+    private class SummaryVH extends RecyclerView.ViewHolder {
+
+        private ItemCafeInfoSummaryBinding binding;
+
+        public SummaryVH(View itemView){
+            super(itemView);
+            binding = DataBindingUtil.bind(itemView);
+            binding.btnBottom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cafeListCallBack.moveToBottom();
+                }
+            });
         }
     }
 

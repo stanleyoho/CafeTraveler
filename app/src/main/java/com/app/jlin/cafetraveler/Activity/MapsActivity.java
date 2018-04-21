@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,12 +13,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
 import com.app.jlin.cafetraveler.Adapter.MapInfoAdapter;
-import com.app.jlin.cafetraveler.Builder.PermissionBuilder;
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
@@ -29,14 +26,12 @@ import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.Utils.LogUtils;
 import com.app.jlin.cafetraveler.Utils.MapUtils;
-import com.app.jlin.cafetraveler.Utils.Utils;
 import com.app.jlin.cafetraveler.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -72,6 +67,10 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mMap != null){
+            mMap.clear();
+            mMap = null;
+        }
     }
 
 
@@ -185,9 +184,32 @@ public class MapsActivity extends FragmentActivity {
 
         @Override
         public void moveToPosition(RMCafe rmCafe) {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(rmCafe.getLatitude(), rmCafe.getLongitude()), 16);
-            mMap.animateCamera(cameraUpdate);
-            mMap.animateCamera(MapUtils.getCameraLatLngZoom(rmCafe.getLatitude(),rmCafe.getLongitude(),18));
+            mMap.animateCamera(MapUtils.getCameraLatLngZoom(rmCafe.getLatitude() + 0.001, rmCafe.getLongitude(),16));
+            LogUtils.e("RMCafe","*************************************");
+            LogUtils.e("RMCafe","Name :" + rmCafe.getName());
+            LogUtils.e("RMCafe","Station :" + rmCafe.getNearestAnnotation());
+            LogUtils.e("RMCafe","WiFi :" + rmCafe.getWifi());
+            LogUtils.e("RMCafe","Seat :" + rmCafe.getSeat());
+            LogUtils.e("RMCafe","Socket :" + rmCafe.getSocket());
+            LogUtils.e("RMCafe","Cheap :" + rmCafe.getCheap());
+            LogUtils.e("RMCafe","Limited_time :" + rmCafe.getLimited_time());
+            LogUtils.e("RMCafe","*************************************");
+        }
+
+        @Override
+        public void moveToTop() {
+            CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
+            if(cafeAdapter != null){
+                binding.recycler.smoothScrollToPosition(0);
+            }
+        }
+
+        @Override
+        public void moveToBottom() {
+            CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
+            if(cafeAdapter != null){
+                binding.recycler.smoothScrollToPosition(cafeAdapter.getItemCount()-1);
+            }
         }
     };
 
