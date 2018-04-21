@@ -75,7 +75,7 @@ public class MyMarkerUtils {
         preMarker = null;
     }
 
-    public static void checkMarker(Context context, GoogleMap map, List<RMCafe> cafeList, RMCafe rmCafe) {
+    public static void checkMarker(Context context, GoogleMap map, RMCafe rmCafe) {
         String title = rmCafe.getName();
         Log.d("checkMarker", "STEP : inIfStmt");
         if (preMarker != null) {
@@ -100,6 +100,7 @@ public class MyMarkerUtils {
 
         Bitmap nowIcon = largeIcon(context);
         nowMarker = addMarker(map, rmCafe, nowIcon);
+        nowMarker.showInfoWindow();
         Log.d("getMarker", "preMarker = " + ((preMarker == null) ? "null" : preMarker.getTitle()) + "\tnowMarker = " + nowMarker.getTitle());
         preMarker = nowMarker;
         Log.d("getMarker", "preMarker = " + preMarker.getTitle() + "\tnowMarker = " + nowMarker.getTitle());

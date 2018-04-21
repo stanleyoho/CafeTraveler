@@ -62,7 +62,7 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         cafeListCallBack.moveToPosition(rmCafe);
-                        MyMarkerUtils.checkMarker(context,map,cafeList,rmCafe);
+                        MyMarkerUtils.checkMarker(context,map,rmCafe);
                     }
                 });
             }
