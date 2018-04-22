@@ -34,15 +34,15 @@ public class MyMarkerUtils {
 //    }
 
     public static Bitmap smallIcon(Context context) {
-        BitmapDrawable icon = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_mymarker);
+        BitmapDrawable icon = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_marker);
         Bitmap bitmap = icon.getBitmap();
-        return Bitmap.createScaledBitmap(bitmap, 80, 160, false);
+        return Bitmap.createScaledBitmap(bitmap, 160, 160, false);
     }
 
     public static Bitmap largeIcon(Context context) {
-        BitmapDrawable icon = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_mymarker_focus);
+        BitmapDrawable icon = (BitmapDrawable) context.getResources().getDrawable(R.drawable.ic_marker_focus);
         Bitmap bitmap = icon.getBitmap();
-        return Bitmap.createScaledBitmap(bitmap, 120, 240, false);
+        return Bitmap.createScaledBitmap(bitmap, 240, 240, false);
     }
 
     public static Marker addMarker(GoogleMap map, RMCafe rmCafe, Bitmap icon) {
