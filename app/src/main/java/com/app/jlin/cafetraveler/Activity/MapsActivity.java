@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.app.jlin.cafetraveler.Adapter.CafeAdapter;
 import com.app.jlin.cafetraveler.Adapter.MapInfoAdapter;
 import com.app.jlin.cafetraveler.Constants.Constants;
+import com.app.jlin.cafetraveler.CustomView.DividerItemDecoration;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
 import com.app.jlin.cafetraveler.R;
@@ -77,6 +78,7 @@ public class MapsActivity extends FragmentActivity {
 
     private void initRecyclerView() {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
+        binding.recycler.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
     }
 
 
