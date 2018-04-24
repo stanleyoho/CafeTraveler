@@ -22,7 +22,9 @@ import com.app.jlin.cafetraveler.Adapter.MapInfoAdapter;
 import com.app.jlin.cafetraveler.Constants.Constants;
 import com.app.jlin.cafetraveler.CustomView.DividerItemDecoration;
 import com.app.jlin.cafetraveler.Interface.CafeListCallBack;
+import com.app.jlin.cafetraveler.Manager.MrtDataManager;
 import com.app.jlin.cafetraveler.Manager.RealmManager;
+import com.app.jlin.cafetraveler.Model.MrtModel;
 import com.app.jlin.cafetraveler.R;
 import com.app.jlin.cafetraveler.RealmModel.RMCafe;
 import com.app.jlin.cafetraveler.Utils.LogUtils;
@@ -68,35 +70,33 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mMap != null){
+        if (mMap != null) {
             mMap.clear();
             mMap = null;
         }
     }
 
 
-
     private void initRecyclerView() {
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
-        binding.recycler.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+        binding.recycler.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
     }
 
 
     /**
-     * @param cafeList dataList of coffee shop
-     * @param map googleMap
+     * @param cafeList     dataList of coffee shop
+     * @param map          googleMap
      * @param isFilterData isFilterData by CheckListActivity
-     * */
+     */
     private void updateRecyclerView(List<RMCafe> cafeList, GoogleMap map, Boolean isFilterData) {
         CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
         if (cafeAdapter == null) {
-            cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack,map);
+            cafeAdapter = new CafeAdapter(this, cafeList, cafeListCallBack, map);
             binding.recycler.setAdapter(cafeAdapter);
         } else {
             cafeAdapter.updateData(this, cafeList, map, isFilterData);
         }
     }
-
 
 
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
@@ -116,7 +116,7 @@ public class MapsActivity extends FragmentActivity {
                 mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
                     @Override
                     public void onMyLocationClick(@NonNull Location location) {
-                        mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(),location.getLongitude(),18));
+                        mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(), location.getLongitude(), 18));
                     }
                 });
             }
@@ -127,38 +127,38 @@ public class MapsActivity extends FragmentActivity {
              * 若沒有最後位置則開啟時定位於台北車站
              */
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new LocationListener(){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new LocationListener() {
 
                 @Override
                 public void onLocationChanged(Location location) {
-                    LogUtils.e("onLocationChanged","onLocationChanged");
-                    Toast.makeText(MapsActivity.this,"onLocationChanged",Toast.LENGTH_SHORT).show();
+                    LogUtils.e("onLocationChanged", "onLocationChanged");
+//                    Toast.makeText(MapsActivity.this,"onLocationChanged",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
-                    LogUtils.e("onStatusChanged","onStatusChanged");
-                    Toast.makeText(MapsActivity.this,"onStatusChanged",Toast.LENGTH_SHORT).show();
+                    LogUtils.e("onStatusChanged", "onStatusChanged");
+//                    Toast.makeText(MapsActivity.this,"onStatusChanged",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onProviderEnabled(String provider) {
-                    LogUtils.e("onProviderEnabled","onProviderEnabled");
-                    Toast.makeText(MapsActivity.this,"onProviderEnabled",Toast.LENGTH_SHORT).show();
+                    LogUtils.e("onProviderEnabled", "onProviderEnabled");
+//                    Toast.makeText(MapsActivity.this,"onProviderEnabled",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
-                    LogUtils.e("onProviderDisabled","onProviderDisabled");
-                    Toast.makeText(MapsActivity.this,"請打開GPS，以獲得更好的服務",Toast.LENGTH_SHORT).show();
+                    LogUtils.e("onProviderDisabled", "onProviderDisabled");
+                    Toast.makeText(MapsActivity.this, "請打開GPS，以獲得更好的服務", Toast.LENGTH_SHORT).show();
                 }
             });
 
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-                mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(),location.getLongitude(),12));
-            }else{
-                mMap.animateCamera(MapUtils.getCameraLatLngZoom(Constants.LOCATION_TAIPIE_STATION_LAT,Constants.LOCATION_TAIPIE_STATION_LNG,12));
+                mMap.animateCamera(MapUtils.getCameraLatLngZoom(location.getLatitude(), location.getLongitude(), 12));
+            } else {
+                mMap.animateCamera(MapUtils.getCameraLatLngZoom(Constants.LOCATION_TAIPIE_STATION_LAT, Constants.LOCATION_TAIPIE_STATION_LNG, 12));
             }
             //recyclerView setAdapter
             updateRecyclerView(RealmManager.getInstance().getRealm().where(RMCafe.class).findAll(), mMap, false);
@@ -186,31 +186,31 @@ public class MapsActivity extends FragmentActivity {
 
         @Override
         public void moveToPosition(RMCafe rmCafe) {
-            mMap.animateCamera(MapUtils.getCameraLatLngZoom(rmCafe.getLatitude() + 0.001, rmCafe.getLongitude(),16));
-            LogUtils.e("RMCafe","*************************************");
-            LogUtils.e("RMCafe","Name :" + rmCafe.getName());
-            LogUtils.e("RMCafe","Station :" + rmCafe.getNearestAnnotation());
-            LogUtils.e("RMCafe","WiFi :" + rmCafe.getWifi());
-            LogUtils.e("RMCafe","Seat :" + rmCafe.getSeat());
-            LogUtils.e("RMCafe","Socket :" + rmCafe.getSocket());
-            LogUtils.e("RMCafe","Cheap :" + rmCafe.getCheap());
-            LogUtils.e("RMCafe","Limited_time :" + rmCafe.getLimited_time());
-            LogUtils.e("RMCafe","*************************************");
+            mMap.animateCamera(MapUtils.getCameraLatLngZoom(rmCafe.getLatitude() + 0.001, rmCafe.getLongitude(), 16));
+            LogUtils.e("RMCafe", "*************************************");
+            LogUtils.e("RMCafe", "Name :" + rmCafe.getName());
+            LogUtils.e("RMCafe", "Station :" + rmCafe.getNearestAnnotation());
+            LogUtils.e("RMCafe", "WiFi :" + rmCafe.getWifi());
+            LogUtils.e("RMCafe", "Seat :" + rmCafe.getSeat());
+            LogUtils.e("RMCafe", "Socket :" + rmCafe.getSocket());
+            LogUtils.e("RMCafe", "Cheap :" + rmCafe.getCheap());
+            LogUtils.e("RMCafe", "Limited_time :" + rmCafe.getLimited_time());
+            LogUtils.e("RMCafe", "*************************************");
         }
 
         @Override
         public void moveToTop() {
-            CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
-            if(cafeAdapter != null){
+            CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
+            if (cafeAdapter != null) {
                 binding.recycler.smoothScrollToPosition(0);
             }
         }
 
         @Override
         public void moveToBottom() {
-            CafeAdapter cafeAdapter = (CafeAdapter)binding.recycler.getAdapter();
-            if(cafeAdapter != null){
-                binding.recycler.smoothScrollToPosition(cafeAdapter.getItemCount()-1);
+            CafeAdapter cafeAdapter = (CafeAdapter) binding.recycler.getAdapter();
+            if (cafeAdapter != null) {
+                binding.recycler.smoothScrollToPosition(cafeAdapter.getItemCount() - 1);
             }
         }
     };
@@ -227,6 +227,7 @@ public class MapsActivity extends FragmentActivity {
             switch (resultCode) {
                 case RESULT_OK:
                     ArrayList<String> checkedListId = data.getExtras().getStringArrayList("checkedCafeList");
+                    String station = data.getExtras().getString("stationName");
                     List<RMCafe> checkedList = new ArrayList<>();
                     if (checkedListId != null) {
                         for (String cafeId : checkedListId) {
@@ -235,6 +236,14 @@ public class MapsActivity extends FragmentActivity {
                         }
                         updateRecyclerView(checkedList, mMap, true);
                     } else {
+                    }
+                    if (station != null) {
+                        for (MrtModel mrtModel : MrtDataManager.getInstance().getMrtInfoList()) {
+                            if (mrtModel.getStation_name_chinese().equals(station)) {
+                                mMap.animateCamera(MapUtils.getCameraLatLngZoom(mrtModel.getLatitude(), mrtModel.getLongitude(), 16));
+                                break;
+                            }
+                        }
                     }
                     break;
                 case RESULT_CANCELED:

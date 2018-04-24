@@ -114,7 +114,9 @@ public class CheckListActivity extends BaseActivity {
                         checkedList.add(rmCafe.getId());
                     }
                     Intent intent = new Intent();
+                    String station = (String)checkedChoice[6];
                     intent.putStringArrayListExtra("checkedCafeList", checkedList);
+                    intent.putExtra("stationName",station);
                     setResult(RESULT_OK, intent);
 //        preferences.setStation(stationPosition);
                     finish();

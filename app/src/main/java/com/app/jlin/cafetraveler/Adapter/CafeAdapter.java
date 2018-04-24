@@ -97,7 +97,7 @@ public class CafeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return cafeList.size() <= 1 ? 1 : cafeList.size() + 2;
+        return cafeList.size() < 1 ? 1 : cafeList.size() + 2;
     }
 
     @Override
