@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/shape_corner"
+    android:padding="12dp">
+    <TextView
+        android:id="@+id/coming_soon_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="@string/coming_soon_dialog_title"
+        android:textSize="16sp"
+        android:textColor="#38ADFF"/>
+    <TextView
+        android:id="@+id/coming_soon_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/coming_soon_string"
+        android:layout_margin="12dp"
+        android:textSize="24sp"/>
+    <Button
+        android:id="@+id/coming_soon_OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/coming_soon_OK"
+        android:textSize="16sp"/>
+</LinearLayout>
+</layout>

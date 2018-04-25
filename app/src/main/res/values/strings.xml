@@ -41,4 +41,8 @@
         <item>淡水信義線</item>
         <item>中和新蘆線</item>
     </string-array>
+
+    <string name="coming_soon_dialog_title">物件名稱</string>
+    <string name="coming_soon_string">即將推出，請再等等吧</string>
+    <string name="coming_soon_OK">好的</string>
 </resources>

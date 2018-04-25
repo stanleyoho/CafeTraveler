@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context="com.app.jlin.cafetraveler.Activity.MainActivity">
 
-    <Button
-        android:id="@+id/btn_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to map"/>
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="4"
+        tools:context="com.app.jlin.cafetraveler.Activity.MainActivity">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:src="@drawable/cafetraveler_with_smoke" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:background="@drawable/ic_favorite" />
+
+            <ImageButton
+                android:id="@+id/btn_map"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginLeft="24dp"
+                android:background="@drawable/ic_map" />
+        </LinearLayout>
+    </LinearLayout>
 </layout>

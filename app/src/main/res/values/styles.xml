@@ -9,4 +9,16 @@
         <item name="android:listDivider">@drawable/divider_bg</item>
     </style>
     
+    <style name="CoomingSoonDialog" parent="android:Theme.Dialog">
+        <!--背景顏色和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除標題-->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除邊框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮現在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊背景-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>
