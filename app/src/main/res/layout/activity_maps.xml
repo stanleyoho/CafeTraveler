@@ -38,6 +38,12 @@
             android:layout_marginBottom="30dp"
             android:src="@android:drawable/ic_search_category_default"
             android:onClick="toCheckList"/>
+        <View
+            android:id="@+id/view"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#0edfdfff"/>
     </RelativeLayout>
 
 

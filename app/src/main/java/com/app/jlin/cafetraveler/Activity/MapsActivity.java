@@ -43,7 +43,7 @@ import java.util.List;
 
 import io.realm.RealmResults;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity{
 
     private GoogleMap mMap;
     private final int REQUEST_CODE = 0;
@@ -54,6 +54,12 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
+        binding.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.e("viewClick","viewClick");
+            }
+        });
         initRecyclerView();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -102,8 +108,9 @@ public class MapsActivity extends FragmentActivity {
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            mMap = googleMap;
 
+            mMap = googleMap;
+            mMap.setOnMapLoadedCallback(onMapLoadedCallback);
             //init zoomPreference
             mMap.setMaxZoomPreference(16f);
             mMap.setMinZoomPreference(3f);
@@ -182,6 +189,8 @@ public class MapsActivity extends FragmentActivity {
         }
     };
 
+
+
     private CafeListCallBack cafeListCallBack = new CafeListCallBack() {
 
         @Override
@@ -254,5 +263,11 @@ public class MapsActivity extends FragmentActivity {
         }
     }
 
+    private GoogleMap.OnMapLoadedCallback onMapLoadedCallback = new GoogleMap.OnMapLoadedCallback() {
+        @Override
+        public void onMapLoaded() {
+            binding.view.setVisibility(View.GONE);
+        }
+    };
 }
 
