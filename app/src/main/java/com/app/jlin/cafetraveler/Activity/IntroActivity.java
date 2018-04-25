@@ -3,10 +3,12 @@ package com.app.jlin.cafetraveler.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.app.jlin.cafetraveler.Constants.UrlConstants;
 import com.app.jlin.cafetraveler.Manager.MrtDataManager;
@@ -47,7 +49,13 @@ public class IntroActivity extends BaseActivity {
         mProgressDialog = new ProgressDialog(IntroActivity.this);
         progressHandler = new ProgressHandler(mProgressDialog);
         handler = new Handler();
+        TextView textView = findViewById(R.id.text_version);
+        try{
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            textView.setText(pInfo.versionName);
+        }catch(Exception e){
 
+        }
         cleanSharedPreferencesData(this);
         initProgressDialog();
         ApiGetCafeData();
