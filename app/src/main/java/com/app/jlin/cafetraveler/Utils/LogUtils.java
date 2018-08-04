@@ -19,7 +19,7 @@ import com.app.jlin.cafetraveler.BuildConfig;
  *   若不設置TAG或者TAG為空則為設置默認TAG
  */
 public class LogUtils {
-    private static final boolean IS_DEBUG = BuildConfig.LOG_DEBUG;
+    private static final boolean IS_DEBUG = BuildConfig.DEBUG;
     private static final int VERBOSE = 1;
     private static final int DEBUG = 2;
     private static final int INFO = 3;

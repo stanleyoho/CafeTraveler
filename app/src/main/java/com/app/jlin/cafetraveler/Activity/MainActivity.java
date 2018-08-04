@@ -1,7 +1,5 @@
 package com.app.jlin.cafetraveler.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
